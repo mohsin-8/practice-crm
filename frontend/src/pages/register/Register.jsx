@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { RegisterAction } from '../../redux/auth/authAction';
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { Box, Grid, GridItem, HStack, Image, Link as ChakraLink, Text, FormControl, FormLabel, Input, Button, Spinner, Alert, AlertIcon } from '@chakra-ui/react'
+import { Box, Grid, GridItem, HStack, Image, Link as ChakraLink, Text, FormControl, FormLabel, Input, Button, Spinner, Alert, AlertIcon, useToast } from '@chakra-ui/react'
 import GoToRegisterPageImage from "../../assets/images/register.jpg";
 import { MdOutlinePerson4 } from "react-icons/md";
 
@@ -12,16 +12,33 @@ const Register = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const toast = useToast();
 
     const { isLoadingRegister, isRegisterError, isAuthenticated } = useSelector(state => state.auth);
 
     useEffect(() => {
         if (isAuthenticated) {
             setTimeout(() => {
-                navigate("/");
+                const role = sessionStorage.getItem('role');
+                if (role) {
+                    if (role === "admin") {
+                        navigate("/admin-dashboard");
+                    } else if (role === "sales") {
+                        navigate("/sales-dashboard");
+                    } else if (role === "support") {
+                        navigate("/support-dashboard");
+                    }
+
+                    toast({
+                        title: "Registeration Successfull",
+                        position: "top-right",
+                        isClosable: true,
+                        status: "success",
+                    });
+                }
             }, 1000);
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate, toast]);
 
     const validate = () => {
         let errors = {};
@@ -167,7 +184,7 @@ const Register = () => {
                                     textDecor={"none !important"}
                                     color={"#605dff"}
                                     fontSize={"16px"}
-                                    fontWeight={"500"}>Sign In
+                                    fontWeight={"500"}> Sign In
                                 </ChakraLink>
                             </Text>
                         </Box>

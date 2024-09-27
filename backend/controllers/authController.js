@@ -84,17 +84,6 @@ exports.refreshToken = async (req, res) => {
     }
 };
 
-exports.logout = async (req, res) => {
-    try {
-        const user = await UserModel.findById(req.user.id);
-        user.refreshToken = null;
-        await user.save();
-        res.status(200).json({ message: 'Logged out successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server Error', error: error.message });
-    }
-};
-
 exports.resetPassword = async (req, res) => {
     const resetToken = req.params.token; // Correctly access the token from params
 

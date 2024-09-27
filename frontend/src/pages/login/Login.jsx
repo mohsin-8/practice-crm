@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoginAction } from '../../redux/auth/authAction';
 
 const Login = () => {
-    console.log("is Rendered Login Page");
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({});
     const toast = useToast();
@@ -19,9 +18,24 @@ const Login = () => {
     useEffect(() => {
         if (isAuthenticated) {
             setTimeout(() => {
-                if (sessionStorage.getItem('token')) {
-                    navigate("/");
-                    toast({ title: "Login Successfull", position: "top-right", isClosable: true, status: "success" });
+                const token = sessionStorage.getItem('token');
+                const role = sessionStorage.getItem('role');
+
+                if (token) {
+                    if (role === "admin") {
+                        navigate("/admin-dashboard");
+                    } else if (role === "sales") {
+                        navigate("/sales-dashboard");
+                    } else if (role === "support") {
+                        navigate("/support-dashboard");
+                    }
+
+                    toast({
+                        title: "Login Successfull",
+                        position: "top-right",
+                        isClosable: true,
+                        status: "success",
+                    });
                 }
             }, 1000);
         }

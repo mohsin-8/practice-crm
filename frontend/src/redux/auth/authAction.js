@@ -11,6 +11,8 @@ export const RegisterAction = (userData) => {
             .then((res) => {
                 if (res.status === 200 || res.status === 201) {
                     sessionStorage.setItem('token', res.data.token);
+                    sessionStorage.setItem("role", res.data.user.role);
+
                     dispatch({
                         type: actionTypes.AUTH_REGISTER_SUCCESS,
                         payload: res
@@ -42,6 +44,7 @@ export const LoginAction = (userData) => {
             .then((res) => {
                 if (res.status === 200) {
                     sessionStorage.setItem("token", res.data.refreshToken);
+                    sessionStorage.setItem("role", res.data.user.role);
 
                     dispatch({
                         type: actionTypes.AUTH_LOGIN_SUCCESS,

@@ -1,6 +1,6 @@
 const express = require("express");
 const { register, login, refreshToken, resetPassword, requestResetPassword, logout } = require("../controllers/authController");
-const { protect, authorize, authenticate } = require("../middlewares/authMiddleware");
+const { protect, authorize } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
@@ -10,7 +10,6 @@ router.post("/login", login);
 router.post("/refresh-token", refreshToken);
 router.post('/reset-password/:token', resetPassword);
 router.post('/request-reset-password', requestResetPassword);
-router.post("/logout", authenticate, logout);
 
 // Protected routes (for testing purposes)
 router.get("/dashboard", protect, (req, res) => {
