@@ -7,7 +7,13 @@ const initial_state = {
     isLoadingLogin: false,
     isLogin: null,
     isLoginError: null,
-    isAuthenticated: false
+    isAuthenticated: false,
+    isLoadingForgot: false,
+    isForgotPassword: null,
+    isForgotError: null,
+    isLoadingResetPassword: false,
+    isResetPassword: null,
+    isResetPasswordError: null
 };
 
 export const authReducer = (state = initial_state, action) => {
@@ -48,6 +54,41 @@ export const authReducer = (state = initial_state, action) => {
                 ...state,
                 isLoadingLogin: false,
                 isLoginError: action.payload,
+            }
+        case actionTypes.AUTH_FORGOT_PASSWORD_LOADING:
+            return {
+                ...state,
+                isLoadingForgot: true
+            };
+        case actionTypes.AUTH_FORGOT_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                isForgotPassword: payload,
+                isLoadingForgot: false
+            };
+        case actionTypes.AUTH_FORGOT_PASSWORD_ERROR:
+            return {
+                ...state,
+                isLoadingForgot: false,
+                isForgotError: action.payload
+            }
+
+        case actionTypes.AUTH_RESET_PASSWORD_LOADING:
+            return {
+                ...state,
+                isLoadingResetPassword: true
+            };
+        case actionTypes.AUTH_RESET_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                isResetPassword: payload,
+                isLoadingResetPassword: false
+            };
+        case actionTypes.AUTH_RESET_PASSWORD_ERROR:
+            return {
+                ...state,
+                isLoadingResetPassword: false,
+                isResetPasswordError: action.payload
             }
         default:
             return state;

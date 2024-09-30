@@ -1,37 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, GridItem, HStack, Image, Text, Link as ChakraLink, FormControl, FormLabel, Input, Button, Alert, AlertIcon, Spinner, useToast } from '@chakra-ui/react';
+import { Box, Grid, GridItem, HStack, Image, Text, FormControl, FormLabel, Input, Button, Alert, AlertIcon, Spinner, useToast } from '@chakra-ui/react';
 import ForgotPasswordPageImage from "../../assets/images/forgot-password.jpg";
-import { Link as RouterLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { ForgotPasswordAction } from '../../redux/auth/authAction';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ResetPasswordAction } from '../../redux/auth/authAction';
 
-const ForgotPassword = () => {
-    const [formData, setFormData] = useState({ email: "" });
+const ResetPassword = () => {
+    const { token } = useParams();
+    const [formData, setFormData] = useState({ password: "" });
     const [errors, setErrors] = useState({});
 
     const toast = useToast();
     const dispatch = useDispatch();
-    const { isLoadingForgot, isForgotPassword, isForgotError } = useSelector(state => state.auth);
+    const navigate = useNavigate();
+    const { isLoadingResetPassword, isResetPassword, isResetPasswordError } = useSelector(state => state.auth);
 
     useEffect(() => {
-        if (isForgotPassword) {
+        if (isResetPassword) {
             toast({
-                title: "Reset link sent!",
-                description: "Check your email for reset instructions.",
+                title: "Password has been changed!",
                 status: "success",
                 duration: 5000,
                 isClosable: true,
             });
+            navigate("/login");
         }
-    }, [isForgotPassword, toast]);
+    }, [isResetPassword, toast, navigate]);
 
     const validate = () => {
         let errors = {};
 
-        if (!formData.email) {
-            errors.email = "Please enter your email.";
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            errors.email = "Please enter a valid email address.";
+        if (!formData.password) {
+            errors.password = "Please enter your password.";
         }
 
         setErrors(errors);
@@ -49,7 +49,7 @@ const ForgotPassword = () => {
     const ForgotPasswordHandleSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
-            dispatch(ForgotPasswordAction(formData));
+            dispatch(ResetPasswordAction(formData, token));
         }
     };
 
@@ -63,27 +63,27 @@ const ForgotPassword = () => {
                     <GridItem>
                         <Box>
                             <Text fontSize={"28px"} mb={"5px"} fontWeight={"700"} color={"#343a40"}>Welcome to Trackly!</Text>
-                            <Text fontSize={"16px"} mb={"20px"} fontWeight={"500"} color={"#64748b"}>Enter the email address you used when you joined and we’ll send you instructions to reset your password.</Text>
-                            {isForgotError && (
+                            <Text fontSize={"16px"} mb={"20px"} fontWeight={"500"} color={"#64748b"}>Please Reset your password.</Text>
+                            {isResetPasswordError && (
                                 <Alert status="error" mb="20px">
                                     <AlertIcon />
-                                    {isForgotError}
+                                    {isResetPasswordError}
                                 </Alert>
                             )}
                             <form onSubmit={ForgotPasswordHandleSubmit}>
                                 <FormControl mb={"20px"}>
-                                    <FormLabel color={"#343a40"} fontSize={"14px"}>Email Address</FormLabel>
+                                    <FormLabel color={"#343a40"} fontSize={"14px"}>Password</FormLabel>
                                     <Input
                                         bgColor={"#fff"}
                                         border={"1px solid #d5d9e2"}
                                         color={"#000"}
                                         h={"60px"}
-                                        placeholder="example@trackly.com"
-                                        name="email"
-                                        type="email"
+                                        placeholder="Type Password"
+                                        name="password"
+                                        type="password"
                                         onChange={handleChange}
                                     />
-                                    {errors.email && <Text color="red.500" fontSize="14px">{errors.email}</Text>}
+                                    {errors.password && <Text color="red.500" fontSize="14px">{errors.password}</Text>}
                                 </FormControl>
                                 <Button
                                     type="submit"
@@ -97,14 +97,9 @@ const ForgotPassword = () => {
                                     w={"100%"}
                                     _hover={{ bgColor: "#524fd9" }}
                                 >
-                                    {isLoadingForgot ? <Spinner size="sm" color="white" /> : <>Request Reset Password</>}
+                                    {isLoadingResetPassword ? <Spinner size="sm" color="white" /> : <>Reset Password</>}
                                 </Button>
                             </form>
-                            <Text mt={"20px"}>Don’t have an account? <ChakraLink as={RouterLink} to="/login"
-                                textDecor={"none !important"}
-                                color={"#605dff"}
-                                fontSize={"16px"}
-                                fontWeight={"500"}>Sign In</ChakraLink></Text>
                         </Box>
                     </GridItem>
                 </Grid>
@@ -113,4 +108,4 @@ const ForgotPassword = () => {
     );
 };
 
-export default ForgotPassword;
+export default ResetPassword;

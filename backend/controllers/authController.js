@@ -47,12 +47,14 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
-
+        console.log(user, "is user login")
         const isMatch = await user.comparePassword(password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid email or password' });
-        }
+        console.log(isMatch, "is Match login");
 
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid email or password1' });
+        }
+        console.log('Password Match login:', isMatch);
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken();
 
@@ -61,7 +63,6 @@ exports.login = async (req, res) => {
         await user.save();
 
         res.status(200).json({ accessToken, refreshToken, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
-
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error: error.message });
     }
@@ -85,11 +86,11 @@ exports.refreshToken = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-    const resetToken = req.params.token; // Correctly access the token from params
+    const resetToken = req.params.token;
+    const { password } = req.body;
 
-    // Ensure resetToken is defined
-    if (!resetToken) {
-        return res.status(400).json({ message: "Reset token is required" });
+    if (!password) {
+        return res.status(400).json({ message: 'New password is required' });
     }
 
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
@@ -101,28 +102,19 @@ exports.resetPassword = async (req, res) => {
         });
 
         if (!user) {
-            return res.status(400).json({ message: 'Invalid token or token expired' });
+            return res.status(400).json({ message: 'Invalid or expired token' });
         }
 
-        // Set the new password
-        const { password } = req.body;
-
-        if (!password) {
-            return res.status(400).json({ message: 'Password is required' });
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-
-        user.resetPasswordToken = undefined; // Clear the reset token
-        user.resetPasswordExpire = undefined; // Clear the expiration
-
-        // Save the updated user
-        await user.save();
-
+        // Update the password
+        user.password = password; // Or hash it here if not hashed in the pre-save hook
+        user.resetPasswordToken = undefined; // Clear reset token
+        user.resetPasswordExpire = undefined; // Clear expiration
+        await user.save(); // Save the updated user
+        console.log(user, "user reset")
         res.status(200).json({ message: 'Password reset successful' });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error: error.message });
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -147,7 +139,8 @@ exports.requestResetPassword = async (req, res) => {
         await user.save();
 
         // Create the reset URL
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${resetToken}`;
+        // const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${resetToken}`;
+        const resetUrl = `${process.env.LOCAL_FRONTEND_URL}/reset-password/${resetToken}`;
 
         // Send the reset email
         const mailOptions = {

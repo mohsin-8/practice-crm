@@ -19,9 +19,10 @@ const Login = () => {
         if (isAuthenticated) {
             setTimeout(() => {
                 const token = sessionStorage.getItem('token');
+                const resetPasstoken = sessionStorage.getItem('resetPasswordToken');
                 const role = sessionStorage.getItem('role');
 
-                if (token) {
+                if (token || resetPasstoken) {
                     if (role === "admin") {
                         navigate("/admin-dashboard");
                     } else if (role === "sales") {

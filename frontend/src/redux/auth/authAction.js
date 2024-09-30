@@ -65,3 +65,61 @@ export const LoginAction = (userData) => {
             });
     };
 };
+
+export const ForgotPasswordAction = (data) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.AUTH_FORGOT_PASSWORD_LOADING
+        });
+
+        axiosInstance.post("/auth/request-reset-password", data)
+            .then((res) => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.AUTH_FORGOT_PASSWORD_SUCCESS,
+                        payload: res.data
+                    });
+                } else {
+                    dispatch({
+                        type: actionTypes.AUTH_FORGOT_PASSWORD_ERROR,
+                        payload: res.data.message || "Forgot Password Failed"
+                    })
+                }
+            })
+            .catch((error) => {
+                dispatch({
+                    type: actionTypes.AUTH_FORGOT_PASSWORD_ERROR,
+                    payload: error.response?.data?.message || "Forgot Password Failed"
+                });
+            });
+    };
+};
+
+export const ResetPasswordAction = (data, token) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.AUTH_RESET_PASSWORD_LOADING
+        });
+
+        axiosInstance.post(`/auth/reset-password/${token}`, data)
+            .then((res) => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.AUTH_RESET_PASSWORD_SUCCESS,
+                        payload: res.data
+                    });
+                } else {
+                    dispatch({
+                        type: actionTypes.AUTH_RESET_PASSWORD_ERROR,
+                        payload: res.data.message || "Reset Password Failed"
+                    });
+                }
+            })
+            .catch((error) => {
+                dispatch({
+                    type: actionTypes.AUTH_RESET_PASSWORD_ERROR,
+                    payload: error.response?.data?.message || "Reset Password Failed"
+                });
+            });
+    };
+};

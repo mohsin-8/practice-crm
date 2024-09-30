@@ -8,6 +8,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import SalesDashboard from './pages/sales/SalesDashboard';
 import SupportDashboard from './pages/support/SupportDashboard';
 import ForgotPassword from './pages/forgot-password/ForgotPassword';
+import ResetPassword from './pages/reset-password/ResetPassword';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Protected Routes for Admin */}
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
