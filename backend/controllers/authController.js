@@ -47,14 +47,12 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
-        console.log(user, "is user login")
         const isMatch = await user.comparePassword(password);
-        console.log(isMatch, "is Match login");
 
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid email or password1' });
         }
-        console.log('Password Match login:', isMatch);
+
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken();
 
@@ -106,14 +104,13 @@ exports.resetPassword = async (req, res) => {
         }
 
         // Update the password
-        user.password = password; // Or hash it here if not hashed in the pre-save hook
+        user.password = password;
         user.resetPasswordToken = undefined; // Clear reset token
         user.resetPasswordExpire = undefined; // Clear expiration
-        await user.save(); // Save the updated user
-        console.log(user, "user reset")
+        await user.save();
+
         res.status(200).json({ message: 'Password reset successful' });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
 };
