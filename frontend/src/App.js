@@ -4,11 +4,9 @@ import Register from './pages/register/Register';
 import Login from './pages/login/Login';
 import Unauthorized from './components/Unauthorized';
 import ProtectedRoute from './ProtectedRoute';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import SalesDashboard from './pages/sales/SalesDashboard';
-import SupportDashboard from './pages/support/SupportDashboard';
 import ForgotPassword from './pages/forgot-password/ForgotPassword';
 import ResetPassword from './pages/reset-password/ResetPassword';
+import Dashboard from './pages/dashboard/Dashboard';
 
 const App = () => {
   return (
@@ -22,18 +20,8 @@ const App = () => {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Protected Routes for Admin */}
-        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        </Route>
-
-        {/* Protected Routes for Sales */}
-        <Route element={<ProtectedRoute allowedRoles={["admin", "sales"]} />}>
-          <Route path="/sales-dashboard" element={<SalesDashboard />} />
-        </Route>
-
-        {/* Protected Routes for Support */}
-        <Route element={<ProtectedRoute allowedRoles={["admin", "support"]} />}>
-          <Route path="/support-dashboard" element={<SupportDashboard />} />
+        <Route element={<ProtectedRoute allowedRoles={["admin", "sales", "support"]} />}>
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
     </>

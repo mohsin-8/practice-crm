@@ -22,11 +22,11 @@ const Register = () => {
                 const role = sessionStorage.getItem('role');
                 if (role) {
                     if (role === "admin") {
-                        navigate("/admin-dashboard");
+                        navigate("/dashboard");
                     } else if (role === "sales") {
-                        navigate("/sales-dashboard");
+                        navigate("/dashboard");
                     } else if (role === "support") {
-                        navigate("/support-dashboard");
+                        navigate("/dashboard");
                     }
 
                     toast({
