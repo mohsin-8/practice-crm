@@ -7,6 +7,7 @@ import ProtectedRoute from './ProtectedRoute';
 import ForgotPassword from './pages/forgot-password/ForgotPassword';
 import ResetPassword from './pages/reset-password/ResetPassword';
 import Dashboard from './pages/dashboard/Dashboard';
+import Users from './pages/Users/Users';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/hr/users" element={<Users />} />
 
         {/* Protected Routes for Admin */}
         <Route element={<ProtectedRoute allowedRoles={["admin", "sales", "support"]} />}>
