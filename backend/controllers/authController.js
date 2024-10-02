@@ -13,7 +13,7 @@ const generateRefreshToken = () => {
 };
 
 exports.register = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, location, phone, projects } = req.body;
 
     try {
         const userExists = await UserModel.findOne({ email: email });
@@ -25,7 +25,10 @@ exports.register = async (req, res) => {
             name,
             email,
             password,
-            role
+            role,
+            location,
+            phone,
+            projects
         });
 
         await user.save();

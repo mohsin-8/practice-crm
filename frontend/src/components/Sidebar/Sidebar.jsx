@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Image, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
+import { Box, Button, Image, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
 import LogoIcon from "../../assets/images/logo-icon.png";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IoMdContacts, IoIosLogOut } from "react-icons/io";
 import { RiCustomerService2Line } from "react-icons/ri";
 import { SiGoogleads } from "react-icons/si";
@@ -11,6 +11,13 @@ import { PiMicrosoftTeamsLogo, PiKanbanLight } from "react-icons/pi";
 import { FaUsers } from "react-icons/fa6";
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("role");
+        sessionStorage.removeItem("token");
+        navigate("/login");
+    };
     return (
         <Box as="nav" position="fixed" left="0" top="0" w="270px" h="100vh" bg="#ffffff">
             <VStack display="block" spacing="4" align="start">
@@ -81,7 +88,23 @@ const Sidebar = () => {
                                 <Link to="/dashboard" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><IoCreateOutline size={20} /> Change Password</Link>
                             </ListItem>
                             <ListItem marginBottom="15px">
-                                <Link to="/dashboard" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><IoIosLogOut size={20} /> Log out</Link>
+                                {/* <Link to="javascript:;" onClick={handleLogout} style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><IoIosLogOut size={20} /> Log out</Link> */}
+                                <Button
+                                    onClick={handleLogout}
+                                    color={"#000000"}
+                                    display={"flex"}
+                                    alignItems={"center"}
+                                    gap={"6px"}
+                                    bg={"unset"}
+                                    _hover={{ bg: "unset" }}
+                                    border={"none"}
+                                    outline={"none"}
+                                    p={"unset"}
+                                    fontWeight={400}
+                                >
+                                    <IoIosLogOut size={20} /> Log out
+                                </Button>
+
                             </ListItem>
                         </UnorderedList>
                     </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import {
     Box,
     Flex,
@@ -17,57 +17,23 @@ import {
     IconButton,
     Button
 } from '@chakra-ui/react';
+import moment from 'moment';
 import { IoEyeOutline, IoPencilOutline, IoTrashOutline } from 'react-icons/io5';
 import Layout from '../../components/Layout';
 import { IoSearch } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { UserDataAction } from '../../redux/users/usersAction';
 
 const Users = () => {
-    const userData = [
-        {
-            id: "#JAN-158",
-            name: "Marcia Baker",
-            email: "marcia@trezo.com",
-            location: "Washington D.C",
-            phone: "+1 555-445-4455",
-            projects: 6,
-            joinDate: "01 Dec 2024",
-            avatar: "https://i.pravatar.cc/300",
-        },
-        {
-            id: "#JAN-325",
-            name: "Carolyn Barnes",
-            email: "barnes@trezo.com",
-            location: "Chicago",
-            phone: "+1 555-455-9966",
-            projects: 10,
-            joinDate: "02 Dec 2024",
-            avatar: "https://i.pravatar.cc/301",
-        },
-        // Add more users as needed...
-    ];
+    const dispatch = useDispatch();
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
+    const { isUserData } = useSelector(state => state.user);
 
-    // Calculate the users to display based on pagination
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentUsers = userData.slice(indexOfFirstItem, indexOfLastItem);
+    useEffect(() => {
+        dispatch(UserDataAction());
+    }, [dispatch]);
 
-    const totalPages = Math.ceil(userData.length / itemsPerPage);
-
-    const handleNextPage = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
-    const handlePrevPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
     return (
         <Layout>
             <Box m={"1.5rem 0px"}>
@@ -108,6 +74,7 @@ const Users = () => {
                                     <Th fontSize={"14px"} fontWeight={600}>User ID</Th>
                                     <Th fontSize={"14px"} fontWeight={600}>User</Th>
                                     <Th fontSize={"14px"} fontWeight={600}>Email</Th>
+                                    <Th fontSize={"14px"} fontWeight={600}>Role</Th>
                                     <Th fontSize={"14px"} fontWeight={600}>Location</Th>
                                     <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
                                     <Th fontSize={"14px"} fontWeight={600}>Projects</Th>
@@ -116,57 +83,60 @@ const Users = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {currentUsers.map((user, index) => (
-                                    <Tr key={index}>
-                                        <Td fontSize={"14px"} fontWeight={400}>{user.id}</Td>
-                                        <Td>
-                                            <Flex alignItems="center">
-                                                <Avatar size="sm" src={user.avatar} mr={3} />
-                                                <Text fontSize={"14px"} fontWeight={400}>{user.name}</Text>
-                                            </Flex>
-                                        </Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>{user.email}</Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>{user.location}</Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>{user.phone}</Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>{user.projects}</Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>{user.joinDate}</Td>
-                                        <Td>
-                                            <IconButton
-                                                variant="ghost"
-                                                icon={<IoEyeOutline />}
-                                                aria-label="View"
-                                                size="md"
-                                                mr={2}
-                                                color="rgb(96, 93, 255)"
-                                            />
-                                            <IconButton
-                                                variant="ghost"
-                                                icon={<IoPencilOutline />}
-                                                aria-label="Edit"
-                                                size="md"
-                                                mr={2}
-                                            />
-                                            <IconButton
-                                                variant="ghost"
-                                                icon={<IoTrashOutline />}
-                                                aria-label="Delete"
-                                                color="red.500"
-                                                size="md"
-                                            />
-                                        </Td>
-                                    </Tr>
-                                ))}
+                                {isUserData.map(user => {
+                                    return (
+                                        <Tr key={user._id}>
+                                            <Td fontSize={"14px"} fontWeight={400}>{user._id}</Td>
+                                            <Td>
+                                                <Flex alignItems="center">
+                                                    <Avatar size="sm" src={user.avatar} mr={3} />
+                                                    <Text fontSize={"14px"} fontWeight={400}>{user.name}</Text>
+                                                </Flex>
+                                            </Td>
+                                            <Td fontSize={"14px"} fontWeight={400}>{user.email}</Td>
+                                            <Td fontSize={"14px"} fontWeight={400}>{user.role}</Td>
+                                            <Td fontSize={"14px"} fontWeight={400}>{user.location}</Td>
+                                            <Td fontSize={"14px"} fontWeight={400}>{user.phone}</Td>
+                                            <Td fontSize={"14px"} fontWeight={400}>{user.projects}</Td>
+                                            <Td fontSize={"14px"} fontWeight={400}>{moment(user.createdAt).format("DD MMM YYYY")}</Td>
+                                            <Td>
+                                                <IconButton
+                                                    variant="ghost"
+                                                    icon={<IoEyeOutline />}
+                                                    aria-label="View"
+                                                    size="md"
+                                                    mr={2}
+                                                    color="rgb(96, 93, 255)"
+                                                />
+                                                <IconButton
+                                                    variant="ghost"
+                                                    icon={<IoPencilOutline />}
+                                                    aria-label="Edit"
+                                                    size="md"
+                                                    mr={2}
+                                                />
+                                                <IconButton
+                                                    variant="ghost"
+                                                    icon={<IoTrashOutline />}
+                                                    aria-label="Delete"
+                                                    color="red.500"
+                                                    size="md"
+                                                />
+                                            </Td>
+                                        </Tr>
+                                    )
+                                })}
                             </Tbody>
                         </Table>
                     </TableContainer>
 
                     <Flex justify="space-between" mt={4} alignItems="center">
-                        <Text fontSize={"14px"} fontWeight={400}>Showing {indexOfFirstItem + 1} to {indexOfLastItem} of {userData.length} results</Text>
+                        <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 5 of {isUserData.length} results</Text>
                         <Flex>
-                            <Button onClick={handlePrevPage} isDisabled={currentPage === 1} mr={2}>
+                            <Button mr={2}>
                                 Previous
                             </Button>
-                            <Button onClick={handleNextPage} isDisabled={currentPage === totalPages}>
+                            <Button>
                                 Next
                             </Button>
                         </Flex>

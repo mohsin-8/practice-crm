@@ -32,6 +32,15 @@ const User = new mongoose.Schema({
     resetPasswordExpire: {
         type: Date,
     },
+    location: {
+        type: String
+    },
+    phone: {
+        type: Number
+    },
+    projects: {
+        type: Number
+    },
     createdAt: {
         type: Date,
         default: Date.now
