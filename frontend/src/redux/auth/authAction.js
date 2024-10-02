@@ -45,6 +45,7 @@ export const LoginAction = (userData) => {
                 if (res.status === 200) {
                     sessionStorage.setItem("token", res.data.refreshToken);
                     sessionStorage.setItem("role", res.data.user.role);
+                    sessionStorage.setItem("user", JSON.stringify(res.data.user));
 
                     dispatch({
                         type: actionTypes.AUTH_LOGIN_SUCCESS,

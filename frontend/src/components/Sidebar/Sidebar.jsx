@@ -16,6 +16,7 @@ const Sidebar = () => {
     const handleLogout = () => {
         sessionStorage.removeItem("role");
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("user");
         navigate("/login");
     };
     return (
@@ -88,7 +89,6 @@ const Sidebar = () => {
                                 <Link to="/dashboard" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><IoCreateOutline size={20} /> Change Password</Link>
                             </ListItem>
                             <ListItem marginBottom="15px">
-                                {/* <Link to="javascript:;" onClick={handleLogout} style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><IoIosLogOut size={20} /> Log out</Link> */}
                                 <Button
                                     onClick={handleLogout}
                                     color={"#000000"}

@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Flex, HStack, Image, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react';
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoSearch, IoNotificationsOutline, IoChevronDown } from "react-icons/io5";
 import userImage from "../../assets/images/user-image.jpg";
 
 const Header = () => {
+    const [userName, setUserName] = useState('');
+
+    useEffect(() => {
+        const userData = JSON.parse(sessionStorage.getItem('user'));
+        if (userData && userData.name) {
+            setUserName(userData.name);
+        }
+    }, []);
+
     const handleOpen = () => {
         console.log("Hit Me");
     };
@@ -55,7 +64,7 @@ const Header = () => {
                 <Box>
                     <Flex gap={2} cursor={"pointer"} onClick={handleOpen}>
                         <Image src={userImage} alt='userImage' />
-                        <Text display={"flex"} gap={"0.5px"} alignItems={"center"}>Mohsin <IoChevronDown /></Text>
+                        <Text display={"flex"} gap={"0.5px"} alignItems={"center"}>{userName} <IoChevronDown /></Text>
                     </Flex>
                 </Box>
             </Flex >

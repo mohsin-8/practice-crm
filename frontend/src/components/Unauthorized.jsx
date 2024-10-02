@@ -5,7 +5,7 @@ const Unauthorized = () => {
     const navigate = useNavigate();
 
     const goBack = () => {
-        navigate(-1);
+        navigate("/dashboard");
     };
 
     return (
@@ -14,7 +14,7 @@ const Unauthorized = () => {
             <p style={styles.message}>
                 You do not have the required permissions to view this page.
             </p>
-            <button style={styles.button} onClick={goBack}>
+            <button style={styles.button} onClick={() => goBack()}>
                 Go Back
             </button>
         </div>

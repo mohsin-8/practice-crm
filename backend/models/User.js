@@ -41,6 +41,7 @@ const User = new mongoose.Schema({
     projects: {
         type: Number
     },
+    isLoggedIn: { type: Boolean },
     createdAt: {
         type: Date,
         default: Date.now
