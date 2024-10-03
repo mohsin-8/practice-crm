@@ -109,8 +109,8 @@ const Users = () => {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {isUserData?.length > 0 ? isUserData?.map(user => {
-                                        return (
+                                    {isUserData?.length > 0 ? (
+                                        isUserData.map((user) => (
                                             <Tr key={user._id}>
                                                 <Td fontSize={"14px"} fontWeight={400}>{user._id}</Td>
                                                 <Td>
@@ -131,11 +131,13 @@ const Users = () => {
                                                     <DeleteUserModal isOpen={isOpen} onClose={onClose} userId={selectedUserId} />
                                                 </Td>
                                             </Tr>
-                                        )
-                                    }) : (
-                                        <Box textAlign={"center"}>
-                                            <Text fontSize="22px" fontWeight={700} color={"#000000"}>No Data Found!!!</Text>
-                                        </Box>
+                                        ))
+                                    ) : (
+                                        <Tr>
+                                            <Td colSpan={9} textAlign="center">
+                                                <Text fontSize="22px" fontWeight={700} color={"#000000"}>No User Data Found!</Text>
+                                            </Td>
+                                        </Tr>
                                     )}
                                 </Tbody>
                             </Table>
