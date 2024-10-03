@@ -5,6 +5,7 @@ const initialState = {
     isUserData: [],
     isLoadingDeleteUser: false,
     isLoadingUpdateUser: false,
+    isLoadingCreateUser: false,
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -57,6 +58,23 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoadingUpdateUser: false,
+            };
+
+        case actionTypes.CREATE_USERS_LOADING:
+            return {
+                ...state,
+                isLoadingCreateUser: true,
+            };
+        case actionTypes.CREATE_USERS_SUCCESS:
+            return {
+                ...state,
+                isUserData: payload,
+                isLoadingCreateUser: false,
+            };
+        case actionTypes.CREATE_USERS_ERROR:
+            return {
+                ...state,
+                isLoadingCreateUser: false,
             };
         default:
             return state;

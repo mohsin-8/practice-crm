@@ -1,4 +1,5 @@
 const UserModel = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 exports.userDetails = async (req, res) => {
     try {
@@ -45,4 +46,33 @@ exports.userDetailsUpdate = async (req, res) => {
     } catch (error) {
         res.status(500).send({ message: error.message });
     }
+};
+
+exports.CreateNewUser = async (req, res) => {
+    const { name, email, role, location, phone, projects, password } = req.body;
+    try {
+        const userExists = await UserModel.findOne({ email: email });
+        if (userExists) {
+            return res.status(400).json({ message: "User already exists" });
+        }
+
+        const user = new UserModel({
+            name,
+            email,
+            password,
+            role,
+            location,
+            phone,
+            projects
+        });
+
+        await user.save();
+
+        // Generate JWT Token
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+        res.status(200).json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    };
 };

@@ -140,7 +140,7 @@ exports.requestResetPassword = async (req, res) => {
 
         // Create the reset URL
         // const resetUrl = `${process.env.LOCAL_FRONTEND_URL}/reset-password/${resetToken}`;
-        const resetUrl = `https://practice-crm-beige.vercel.app/reset-password/${resetToken}`;
+        const resetUrl = `${process.env.LOCAL_FRONTEND_URL}/reset-password/${resetToken}`;
 
         // Send the reset email
         const mailOptions = {

@@ -18,9 +18,9 @@ const Login = () => {
     useEffect(() => {
         if (isAuthenticated) {
             setTimeout(() => {
-                const token = sessionStorage.getItem('token');
-                const resetPasstoken = sessionStorage.getItem('resetPasswordToken');
-                const role = sessionStorage.getItem('role');
+                const token = localStorage.getItem('token');
+                const resetPasstoken = localStorage.getItem('resetPasswordToken');
+                const role = localStorage.getItem('role');
 
                 if (token || resetPasstoken) {
                     if (role === "admin") {

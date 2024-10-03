@@ -10,8 +10,8 @@ export const RegisterAction = (userData) => {
         axiosInstance.post("/auth/register", userData)
             .then((res) => {
                 if (res.status === 200 || res.status === 201) {
-                    sessionStorage.setItem('token', res.data.token);
-                    sessionStorage.setItem("role", res.data.user.role);
+                    localStorage.setItem('token', res.data.token);
+                    localStorage.setItem("role", res.data.user.role);
 
                     dispatch({
                         type: actionTypes.AUTH_REGISTER_SUCCESS,
@@ -43,9 +43,9 @@ export const LoginAction = (userData) => {
         axiosInstance.post("/auth/login", userData)
             .then((res) => {
                 if (res.status === 200) {
-                    sessionStorage.setItem("token", res.data.refreshToken);
-                    sessionStorage.setItem("role", res.data.user.role);
-                    sessionStorage.setItem("user", JSON.stringify(res.data.user));
+                    localStorage.setItem("token", res.data.refreshToken);
+                    localStorage.setItem("role", res.data.user.role);
+                    localStorage.setItem("user", JSON.stringify(res.data.user));
 
                     dispatch({
                         type: actionTypes.AUTH_LOGIN_SUCCESS,

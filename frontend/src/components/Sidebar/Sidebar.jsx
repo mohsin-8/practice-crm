@@ -14,9 +14,9 @@ const Sidebar = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        sessionStorage.removeItem("role");
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("user");
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         navigate("/login");
     };
     return (

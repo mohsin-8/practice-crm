@@ -78,7 +78,7 @@ const Users = () => {
                         </InputRightElement>
                     </InputGroup>
 
-                    <Link to="/users/add-user"
+                    <Link to="/hr/users/add-new"
                         style={{
                             border: "1px solid rgb(96, 93, 255)",
                             fontSize: "16px",
@@ -109,7 +109,7 @@ const Users = () => {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {isUserData.map(user => {
+                                    {isUserData?.length > 0 ? isUserData?.map(user => {
                                         return (
                                             <Tr key={user._id}>
                                                 <Td fontSize={"14px"} fontWeight={400}>{user._id}</Td>
@@ -132,7 +132,11 @@ const Users = () => {
                                                 </Td>
                                             </Tr>
                                         )
-                                    })}
+                                    }) : (
+                                        <Box textAlign={"center"}>
+                                            <Text fontSize="22px" fontWeight={700} color={"#000000"}>No Data Found!!!</Text>
+                                        </Box>
+                                    )}
                                 </Tbody>
                             </Table>
                         )}

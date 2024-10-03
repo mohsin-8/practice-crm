@@ -86,3 +86,32 @@ export const UserUpdateAction = (userId, formData, onSuccess) => {
             });
     };
 };
+
+export const UserCreateAction = (formData, onSuccess) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.CREATE_USERS_LOADING
+        });
+        axiosInstance.post(`/hr/users/create-user`, formData)
+            .then((res) => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.CREATE_USERS_SUCCESS,
+                        payload: res.data
+                    });
+                    onSuccess();
+                } else {
+                    dispatch({
+                        type: actionTypes.CREATE_USERS_ERROR,
+                        payload: res.data.message
+                    });
+                }
+            })
+            .catch((error) => {
+                dispatch({
+                    type: actionTypes.CREATE_USERS_ERROR,
+                    payload: error.response?.data?.message || "Failed to add user data."
+                });
+            });
+    };
+};

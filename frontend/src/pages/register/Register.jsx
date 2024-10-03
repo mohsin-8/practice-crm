@@ -19,7 +19,7 @@ const Register = () => {
     useEffect(() => {
         if (isAuthenticated) {
             setTimeout(() => {
-                const role = sessionStorage.getItem('role');
+                const role = localStorage.getItem('role');
                 if (role) {
                     if (role === "admin") {
                         navigate("/dashboard");
