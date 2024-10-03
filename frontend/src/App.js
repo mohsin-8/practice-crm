@@ -9,6 +9,7 @@ import ResetPassword from './pages/reset-password/ResetPassword';
 import Dashboard from './pages/dashboard/Dashboard';
 import Users from './pages/Users/Users';
 import AddNewUser from './pages/Users/AddNewUser';
+import ProfileSettings from './pages/profile-settings/ProfileSettings';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/profile-settings" element={<ProfileSettings />} />
 
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/hr/users" element={<Users />} />
