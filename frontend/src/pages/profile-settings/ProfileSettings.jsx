@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Layout from "../../components/Layout";
 import { Box, Text, Grid, GridItem, FormControl, FormLabel, Input, Select, Button, useToast } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetUserAction } from '../../redux/auth/authAction';
+import { GetChangePasswordAction, GetUserAction } from '../../redux/auth/authAction';
+import { UserUpdateAction } from '../../redux/users/usersAction';
 
 const AccountSettings = () => {
-    const [formData, setFormData] = useState({ name: "", email: "", role: "", location: "", phone: "", projects: "", password: "" });
-    const { isGetUser } = useSelector(state => state.auth);
-    console.log(isGetUser, "users");
+    const [formData, setFormData] = useState({ name: "", email: "", role: "", location: "", phone: "", projects: "", currentPassword: "", newPassword: "", confirmNewPassword: "" });
+    const [errors, setErrors] = useState({});
 
+    const { isGetUser } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const toast = useToast();
 
@@ -25,9 +26,10 @@ const AccountSettings = () => {
                 role: role || "",
                 location: location || "",
                 phone: phone || "",
-                projects: projects || "",
-                password: ""
+                projects: projects || ""
             });
+        } else {
+            setFormData({ name: "", email: "", role: "", location: "", phone: "", projects: "" });
         }
     }, [isGetUser]);
 
@@ -39,8 +41,80 @@ const AccountSettings = () => {
         });
     };
 
+    const validate = () => {
+        let errors = {};
+
+        if (!formData.currentPassword) {
+            errors.currentPassword = "Please enter current your password.";
+        } else if (formData.currentPassword.length < 6) {
+            errors.currentPassword = "Password must be at least 6 characters long.";
+        } else if (!formData.newPassword) {
+            errors.newPassword = "Please enter new password.";
+        } else if (formData.newPassword.length < 6) {
+            errors.newPassword = "Password must be at least 6 characters long.";
+        } else if (!formData.confirmNewPassword) {
+            errors.confirmNewPassword = "Please enter new password.";
+        } else if (formData.confirmNewPassword.length < 6) {
+            errors.confirmNewPassword = "Password must be at least 6 characters long.";
+        }
+
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const onSuccess = () => {
+        toast({
+            title: "Update Profile Successfull",
+            position: "top-right",
+            isClosable: true,
+            status: "success",
+        });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        dispatch(UserUpdateAction(isGetUser?._id, formData, onSuccess));
+    };
+
+    const onSuccessChangePassword = () => {
+        toast({
+            title: "Update New Password Successfull",
+            position: "top-right",
+            isClosable: true,
+            status: "success",
+        });
+    };
+
+    const handlePasswordSubmit = (e) => {
+        e.preventDefault();
+
+        if (formData.newPassword !== formData.confirmNewPassword) {
+            toast({
+                title: "Passwords do not match",
+                position: "top-right",
+                isClosable: true,
+                status: "error",
+            });
+            return;
+        }
+
+        const data = {
+            currentPassword: formData.currentPassword,
+            newPassword: formData.newPassword,
+            confirmNewPassword: formData.confirmNewPassword
+        };
+
+        if (validate()) {
+            dispatch(GetChangePasswordAction(data));
+            onSuccessChangePassword();
+        } else {
+            toast({
+                title: "Validation failed. Please check your inputs.",
+                position: "top-right",
+                isClosable: true,
+                status: "warning",
+            });
+        }
     };
 
     return (
@@ -64,7 +138,6 @@ const AccountSettings = () => {
                                     onChange={handleChange}
                                     placeholder='Enter user name'
                                 />
-                                {/* {errors.name && <Text color="red.500" fontSize="14px">{errors.name}</Text>} */}
                             </FormControl>
                         </GridItem>
                         <GridItem>
@@ -79,7 +152,6 @@ const AccountSettings = () => {
                                     onChange={handleChange}
                                     placeholder='Enter user email'
                                 />
-                                {/* {errors.email && <Text color="red.500" fontSize="14px">{errors.email}</Text>} */}
                             </FormControl>
 
                         </GridItem>
@@ -125,7 +197,6 @@ const AccountSettings = () => {
                                     onChange={handleChange}
                                     placeholder='Enter user phone number'
                                 />
-                                {/* {errors.phone && <Text color="red.500" fontSize="14px">{errors.phone}</Text>} */}
                             </FormControl>
                         </GridItem>
                         <GridItem>
@@ -142,32 +213,43 @@ const AccountSettings = () => {
                                 />
                             </FormControl>
                         </GridItem>
+                    </Grid>
+                    <Box mt={"30px"}>
+                        <Button w={"100%"} bg={"rgb(96, 93, 255)"} _hover={{ bg: "rgb(96, 93, 255)" }} color={"#ffffff"} h={"50px"} type='submit'>
+                            Update Profile
+                        </Button>
+                    </Box>
+                </form>
+            </Box>
+
+            <Box p={"1.5rem"} bgColor={"#ffffff"} borderRadius={"0.5rem"} mt={"30px"}>
+                <form onSubmit={handlePasswordSubmit}>
+                    <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                         <GridItem>
                             <FormControl>
-                                <FormLabel>Change Password</FormLabel>
-                                <Input
-                                    type='password'
-                                    w={"100%"}
-                                    h={"50px"}
-                                    name='password'
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    placeholder='Change Password'
-                                />
-                                {/* {errors.password && <Text color="red.500" fontSize="14px">{errors.password}</Text>} */}
+                                <FormLabel>Current Password</FormLabel>
+                                <Input type='password' w={"100%"} h={"50px"} name='currentPassword' value={formData.currentPassword} onChange={handleChange} placeholder='Enter your current password' />
+                                {errors.currentPassword && <Text color="red.500" fontSize="14px">{errors.currentPassword}</Text>}
+                            </FormControl>
+                        </GridItem>
+                        <GridItem>
+                            <FormControl>
+                                <FormLabel>New Password</FormLabel>
+                                <Input type='password' w={"100%"} h={"50px"} name='newPassword' value={formData.newPassword} onChange={handleChange} placeholder='Enter your new password' />
+                                {errors.newPassword && <Text color="red.500" fontSize="14px">{errors.newPassword}</Text>}
+                            </FormControl>
+                        </GridItem>
+                        <GridItem>
+                            <FormControl>
+                                <FormLabel>Confirm New Password</FormLabel>
+                                <Input type='password' w={"100%"} h={"50px"} name='confirmNewPassword' value={formData.confirmNewPassword} onChange={handleChange} placeholder='Confirm your new password' />
+                                {errors.confirmNewPassword && <Text color="red.500" fontSize="14px">{errors.confirmNewPassword}</Text>}
                             </FormControl>
                         </GridItem>
                     </Grid>
                     <Box mt={"30px"}>
-                        <Button
-                            w={"100%"}
-                            bg={"rgb(96, 93, 255)"}
-                            _hover={{ bg: "rgb(96, 93, 255)" }}
-                            color={"#ffffff"}
-                            h={"50px"}
-                            type='submit'
-                        >
-                            Update Profile
+                        <Button w={"100%"} bg={"rgb(96, 93, 255)"} _hover={{ bg: "rgb(96, 93, 255)" }} color={"#ffffff"} h={"50px"} type='submit'>
+                            Update New Password
                         </Button>
                     </Box>
                 </form>
@@ -176,4 +258,4 @@ const AccountSettings = () => {
     )
 }
 
-export default AccountSettings
+export default AccountSettings;

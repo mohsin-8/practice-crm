@@ -16,7 +16,10 @@ const initial_state = {
     isResetPasswordError: null,
     isLoadingGetUser: false,
     isGetUser: null,
-    isGetUserError: null
+    isGetUserError: null,
+    isLoadingChangePassword: false,
+    isChangePassword: null,
+    isChangePasswordError: null
 };
 
 export const authReducer = (state = initial_state, action) => {
@@ -110,6 +113,24 @@ export const authReducer = (state = initial_state, action) => {
                 ...state,
                 isLoadingGetUser: false,
                 isGetUserError: action.payload
+            }
+
+        case actionTypes.AUTH_CHANGE_PASSWORD_LOADING:
+            return {
+                ...state,
+                isLoadingChangePassword: true
+            };
+        case actionTypes.AUTH_CHANGE_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                isChangePassword: payload,
+                isLoadingChangePassword: false
+            };
+        case actionTypes.AUTH_CHANGE_PASSWORD_ERROR:
+            return {
+                ...state,
+                isLoadingChangePassword: false,
+                isChangePasswordError: action.payload
             }
         default:
             return state;

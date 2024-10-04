@@ -166,3 +166,44 @@ export const GetUserAction = () => {
         }
     };
 };
+
+export const GetChangePasswordAction = (data) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.AUTH_CHANGE_PASSWORD_LOADING
+        });
+
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            axiosInstance.put(`/auth/change-password`, data, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        dispatch({
+                            type: actionTypes.AUTH_CHANGE_PASSWORD_SUCCESS,
+                            payload: res.data.data
+                        });
+                    } else {
+                        dispatch({
+                            type: actionTypes.AUTH_CHANGE_PASSWORD_ERROR,
+                            payload: res.data.message || "Failed to retrieve user data"
+                        });
+                    }
+                })
+                .catch((error) => {
+                    dispatch({
+                        type: actionTypes.AUTH_CHANGE_PASSWORD_ERROR,
+                        payload: error.response?.data?.message || "Failed to retrieve user data"
+                    });
+                });
+        } else {
+            dispatch({
+                type: actionTypes.AUTH_CHANGE_PASSWORD_ERROR,
+                payload: "No token found, please log in"
+            });
+        }
+    };
+};

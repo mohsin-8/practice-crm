@@ -50,6 +50,8 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
+
+        // Compare entered password with stored password
         const isMatch = await user.comparePassword(password);
 
         if (!isMatch) {
@@ -68,6 +70,7 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
+
 
 exports.refreshToken = async (req, res) => {
     const { token } = req.body;
@@ -140,7 +143,7 @@ exports.requestResetPassword = async (req, res) => {
 
         // Create the reset URL
         // const resetUrl = `${process.env.LOCAL_FRONTEND_URL}/reset-password/${resetToken}`;
-        const resetUrl = `${process.env.LOCAL_FRONTEND_URL}/reset-password/${resetToken}`;
+        const resetUrl = `${process.env.LIVE_FRONTEND_URL}/reset-password/${resetToken}`;
 
         // Send the reset email
         const mailOptions = {
@@ -172,5 +175,30 @@ exports.getLoggedInUser = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({ message: error.message });
+    }
+};
+
+exports.changePassword = async (req, res) => {
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+    try {
+        const user = await UserModel.findById(req.user.id);
+
+        const isMatch = await user.comparePassword(currentPassword);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Current password is incorrect' });
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            return res.status(400).json({ message: 'New passwords do not match' });
+        }
+
+        user.password = newPassword;
+
+        await user.save();
+
+        res.status(200).json({ message: 'Password changed successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
