@@ -17,6 +17,7 @@ const Sidebar = () => {
         localStorage.removeItem("role");
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+        localStorage.removeItem("accessToken");
         navigate("/login");
     };
     return (
@@ -83,7 +84,7 @@ const Sidebar = () => {
                         </Box>
                         <UnorderedList listStyleType="none">
                             <ListItem marginBottom="15px">
-                                <Link to="/account-settings" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><GoProjectRoadmap size={20} /> Profile Settings</Link>
+                                <Link to="/profile-settings" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><GoProjectRoadmap size={20} /> Profile Settings</Link>
                             </ListItem>
                             <ListItem marginBottom="15px">
                                 <Button

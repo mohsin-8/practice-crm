@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
         const isMatch = await user.comparePassword(password);
 
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid email or password1' });
+            return res.status(400).json({ message: 'Invalid email or password' });
         }
 
         const accessToken = generateAccessToken(user);
@@ -63,7 +63,7 @@ exports.login = async (req, res) => {
         user.refreshToken = refreshToken;
         await user.save();
 
-        res.status(200).json({ accessToken, refreshToken, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+        res.status(200).json({ accessToken, refreshToken, user: { id: user._id, name: user.name, email: user.email, role: user.role, projects: user.projects, phone: user.phone, location: user.location } });
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error: error.message });
     }
@@ -157,5 +157,20 @@ exports.requestResetPassword = async (req, res) => {
         res.status(200).json({ message: 'Reset token sent to email' });
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+};
+
+exports.getLoggedInUser = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: req.user,
+        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
 };

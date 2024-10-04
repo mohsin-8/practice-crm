@@ -3,28 +3,31 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Middleware to verify token and role
 exports.protect = async (req, res, next) => {
     let token;
 
     // Check if token exists in headers
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        try {
-            token = req.headers.authorization.split(' ')[1];
-
-            // Verify token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            // Fetch user from decoded token
-            req.user = await User.findById(decoded.id).select('-password');
-            next();
-        } catch (error) {
-            res.status(401).json({ message: 'Not authorized, token failed' });
-        }
+        token = req.headers.authorization.split(' ')[1];
     }
 
+    // If no token, return an unauthorized error
     if (!token) {
         return res.status(401).json({ message: 'Not authorized, no token' });
+    }
+
+    try {
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Fetch user from decoded token and exclude the password field
+        req.user = await User.findById(decoded.id).select('-password');
+
+        // Move to the next middleware or route handler
+        next();
+    } catch (error) {
+        // Handle token verification errors
+        return res.status(401).json({ message: 'Not authorized, token failed' });
     }
 };
 

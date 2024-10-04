@@ -43,6 +43,7 @@ export const LoginAction = (userData) => {
         axiosInstance.post("/auth/login", userData)
             .then((res) => {
                 if (res.status === 200) {
+                    localStorage.setItem("accessToken", res.data.accessToken);
                     localStorage.setItem("token", res.data.refreshToken);
                     localStorage.setItem("role", res.data.user.role);
                     localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -122,5 +123,46 @@ export const ResetPasswordAction = (data, token) => {
                     payload: error.response?.data?.message || "Reset Password Failed"
                 });
             });
+    };
+};
+
+export const GetUserAction = () => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.AUTH_GET_USER_LOADING
+        });
+
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            axiosInstance.get(`/auth/me`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        dispatch({
+                            type: actionTypes.AUTH_GET_USER_SUCCESS,
+                            payload: res.data.data
+                        });
+                    } else {
+                        dispatch({
+                            type: actionTypes.AUTH_GET_USER_ERROR,
+                            payload: res.data.message || "Failed to retrieve user data"
+                        });
+                    }
+                })
+                .catch((error) => {
+                    dispatch({
+                        type: actionTypes.AUTH_GET_USER_ERROR,
+                        payload: error.response?.data?.message || "Failed to retrieve user data"
+                    });
+                });
+        } else {
+            dispatch({
+                type: actionTypes.AUTH_GET_USER_ERROR,
+                payload: "No token found, please log in"
+            });
+        }
     };
 };
