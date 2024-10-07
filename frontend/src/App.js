@@ -28,7 +28,7 @@ const App = () => {
           <Route path="/hr/users/add-new" element={<AddNewUser />} />
         </Route>
         {/* Protected Routes for Admin */}
-        <Route element={<ProtectedRoute allowedRoles={["admin", "sales", "support"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["admin", "sales", "support", "team lead", "manager"]} />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>

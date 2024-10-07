@@ -61,6 +61,11 @@ export const authReducer = (state = initial_state, action) => {
                 isLoadingLogin: false,
                 isLoginError: action.payload,
             }
+        case actionTypes.CLEAR_LOGIN_ERROR:
+            return {
+                ...state,
+                isLoginError: null,
+            };
         case actionTypes.AUTH_FORGOT_PASSWORD_LOADING:
             return {
                 ...state,

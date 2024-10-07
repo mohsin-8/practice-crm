@@ -5,11 +5,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GetChangePasswordAction, GetUserAction } from '../../redux/auth/authAction';
 import { UserUpdateAction } from '../../redux/users/usersAction';
 
-const AccountSettings = () => {
-    const [formData, setFormData] = useState({ name: "", email: "", role: "", location: "", phone: "", projects: "", currentPassword: "", newPassword: "", confirmNewPassword: "" });
+const ProfileSettings = () => {
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        role: "",
+        location: "",
+        phone: "",
+        projects: "",
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: ""
+    });
     const [errors, setErrors] = useState({});
 
     const { isGetUser } = useSelector(state => state.auth);
+    console.log(isGetUser);
     const dispatch = useDispatch();
     const toast = useToast();
 
@@ -45,15 +56,19 @@ const AccountSettings = () => {
         let errors = {};
 
         if (!formData.currentPassword) {
-            errors.currentPassword = "Please enter current your password.";
+            errors.currentPassword = "Please enter your current password.";
         } else if (formData.currentPassword.length < 6) {
             errors.currentPassword = "Password must be at least 6 characters long.";
-        } else if (!formData.newPassword) {
-            errors.newPassword = "Please enter new password.";
+        }
+
+        if (!formData.newPassword) {
+            errors.newPassword = "Please enter a new password.";
         } else if (formData.newPassword.length < 6) {
             errors.newPassword = "Password must be at least 6 characters long.";
-        } else if (!formData.confirmNewPassword) {
-            errors.confirmNewPassword = "Please enter new password.";
+        }
+
+        if (!formData.confirmNewPassword) {
+            errors.confirmNewPassword = "Please confirm your new password.";
         } else if (formData.confirmNewPassword.length < 6) {
             errors.confirmNewPassword = "Password must be at least 6 characters long.";
         }
@@ -64,7 +79,7 @@ const AccountSettings = () => {
 
     const onSuccess = () => {
         toast({
-            title: "Update Profile Successfull",
+            title: "Update Profile Successful",
             position: "top-right",
             isClosable: true,
             status: "success",
@@ -78,7 +93,7 @@ const AccountSettings = () => {
 
     const onSuccessChangePassword = () => {
         toast({
-            title: "Update New Password Successfull",
+            title: "Update New Password Successful",
             position: "top-right",
             isClosable: true,
             status: "success",
@@ -107,6 +122,7 @@ const AccountSettings = () => {
         if (validate()) {
             dispatch(GetChangePasswordAction(data));
             onSuccessChangePassword();
+            setFormData({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
         } else {
             toast({
                 title: "Validation failed. Please check your inputs.",
@@ -134,7 +150,7 @@ const AccountSettings = () => {
                                     w={"100%"}
                                     h={"50px"}
                                     name='name'
-                                    value={formData.name}
+                                    value={formData.name || ""}
                                     onChange={handleChange}
                                     placeholder='Enter user name'
                                 />
@@ -148,7 +164,7 @@ const AccountSettings = () => {
                                     w={"100%"}
                                     h={"50px"}
                                     name='email'
-                                    value={formData.email}
+                                    value={formData.email || ""}
                                     onChange={handleChange}
                                     placeholder='Enter user email'
                                 />
@@ -160,7 +176,7 @@ const AccountSettings = () => {
                                 <FormLabel>Roles</FormLabel>
                                 <Select
                                     name="role"
-                                    value={formData.role}
+                                    value={formData.role || ""}
                                     onChange={handleChange}
                                     h={"50px"}
                                 >
@@ -168,6 +184,8 @@ const AccountSettings = () => {
                                     <option value="admin">Admin</option>
                                     <option value="sales">Sales</option>
                                     <option value="support">Support</option>
+                                    <option value="team lead">Team Lead</option>
+                                    <option value="manager">Manager</option>
                                 </Select>
                             </FormControl>
                         </GridItem>
@@ -179,7 +197,7 @@ const AccountSettings = () => {
                                     w={"100%"}
                                     h={"50px"}
                                     name='location'
-                                    value={formData.location}
+                                    value={formData.location || ""}
                                     onChange={handleChange}
                                     placeholder='Enter user location'
                                 />
@@ -193,7 +211,7 @@ const AccountSettings = () => {
                                     w={"100%"}
                                     h={"50px"}
                                     name='phone'
-                                    value={formData.phone}
+                                    value={formData.phone || ""}
                                     onChange={handleChange}
                                     placeholder='Enter user phone number'
                                 />
@@ -207,7 +225,7 @@ const AccountSettings = () => {
                                     w={"100%"}
                                     h={"50px"}
                                     name='projects'
-                                    value={formData.projects}
+                                    value={formData.projects || ""}
                                     onChange={handleChange}
                                     placeholder='Enter user projects'
                                 />
@@ -228,21 +246,21 @@ const AccountSettings = () => {
                         <GridItem>
                             <FormControl>
                                 <FormLabel>Current Password</FormLabel>
-                                <Input type='password' w={"100%"} h={"50px"} name='currentPassword' value={formData.currentPassword} onChange={handleChange} placeholder='Enter your current password' />
+                                <Input type='password' w={"100%"} h={"50px"} name='currentPassword' value={formData.currentPassword || ""} onChange={handleChange} placeholder='Enter your current password' />
                                 {errors.currentPassword && <Text color="red.500" fontSize="14px">{errors.currentPassword}</Text>}
                             </FormControl>
                         </GridItem>
                         <GridItem>
                             <FormControl>
                                 <FormLabel>New Password</FormLabel>
-                                <Input type='password' w={"100%"} h={"50px"} name='newPassword' value={formData.newPassword} onChange={handleChange} placeholder='Enter your new password' />
+                                <Input type='password' w={"100%"} h={"50px"} name='newPassword' value={formData.newPassword || ""} onChange={handleChange} placeholder='Enter your new password' />
                                 {errors.newPassword && <Text color="red.500" fontSize="14px">{errors.newPassword}</Text>}
                             </FormControl>
                         </GridItem>
                         <GridItem>
                             <FormControl>
                                 <FormLabel>Confirm New Password</FormLabel>
-                                <Input type='password' w={"100%"} h={"50px"} name='confirmNewPassword' value={formData.confirmNewPassword} onChange={handleChange} placeholder='Confirm your new password' />
+                                <Input type='password' w={"100%"} h={"50px"} name='confirmNewPassword' value={formData.confirmNewPassword || ""} onChange={handleChange} placeholder='Confirm your new password' />
                                 {errors.confirmNewPassword && <Text color="red.500" fontSize="14px">{errors.confirmNewPassword}</Text>}
                             </FormControl>
                         </GridItem>
@@ -258,4 +276,4 @@ const AccountSettings = () => {
     )
 }
 
-export default AccountSettings;
+export default ProfileSettings;

@@ -12,6 +12,7 @@ export const RegisterAction = (userData) => {
                 if (res.status === 200 || res.status === 201) {
                     localStorage.setItem('token', res.data.token);
                     localStorage.setItem("role", res.data.user.role);
+                    localStorage.setItem("user", JSON.stringify(res.data.user));
 
                     dispatch({
                         type: actionTypes.AUTH_REGISTER_SUCCESS,
@@ -205,5 +206,11 @@ export const GetChangePasswordAction = (data) => {
                 payload: "No token found, please log in"
             });
         }
+    };
+};
+
+export const clearLoginError = () => {
+    return {
+        type: actionTypes.CLEAR_LOGIN_ERROR,
     };
 };

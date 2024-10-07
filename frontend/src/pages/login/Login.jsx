@@ -4,7 +4,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import GoToLoginPageImage from "../../assets/images/login.jpg";
 import { MdLogin } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
-import { LoginAction } from '../../redux/auth/authAction';
+import { LoginAction, clearLoginError } from '../../redux/auth/authAction';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: "", password: "" });
@@ -29,6 +29,10 @@ const Login = () => {
                         navigate("/dashboard");
                     } else if (role === "support") {
                         navigate("/dashboard");
+                    } else if (role === "team lead") {
+                        navigate("/dashboard");
+                    } else if (role === "manager") {
+                        navigate("/dashboard");
                     }
 
                     toast({
@@ -40,7 +44,11 @@ const Login = () => {
                 }
             }, 1000);
         }
-    }, [isAuthenticated, navigate, toast]);
+
+        return () => {
+            dispatch(clearLoginError());
+        };
+    }, [isAuthenticated, navigate, toast, dispatch]);
 
     const validate = () => {
         let errors = {};
@@ -66,6 +74,13 @@ const Login = () => {
             ...formData,
             [name]: value,
         });
+
+        if (errors[name]) {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [name]: null,
+            }));
+        }
     };
 
     const loginHandleSubmit = (e) => {

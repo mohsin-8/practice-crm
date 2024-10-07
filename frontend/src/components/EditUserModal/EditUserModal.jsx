@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Flex, Grid, GridItem, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Select, useToast } from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormLabel, Grid, GridItem, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Select, useToast } from '@chakra-ui/react';
 import { UserUpdateAction } from '../../redux/users/usersAction';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -71,32 +71,62 @@ const EditUserModal = ({ isOpen, onClose, userId, refreshUpdateTableData }) => {
                         <form onSubmit={handleEditUser}>
                             <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                                 <GridItem>
-                                    <Input type='text' name='name' placeholder="Enter your name" value={formData.name} onChange={handleChange} />
+                                    <FormControl>
+                                        <FormLabel>
+                                            User Name
+                                        </FormLabel>
+                                        <Input type='text' name='name' placeholder="Enter your name" value={formData.name} onChange={handleChange} />
+                                    </FormControl>
                                 </GridItem>
                                 <GridItem>
-                                    <Input type='email' name='email' placeholder="Enter your email" value={formData.email} onChange={handleChange} />
+                                    <FormControl>
+                                        <FormLabel>
+                                            User Email Address
+                                        </FormLabel>
+                                        <Input type='email' name='email' placeholder="Enter your email" value={formData.email} onChange={handleChange} />
+                                    </FormControl>
                                 </GridItem>
                                 <GridItem>
-                                    <Select
-                                        name="role"
-                                        value={formData.role}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="">Select Role</option>
-                                        <option value="admin">Admin</option>
-                                        <option value="sales">Sales</option>
-                                        <option value="support">Support</option>
-                                    </Select>
+                                    <FormControl>
+                                        <FormLabel>
+                                            User Role
+                                        </FormLabel>
+                                        <Select
+                                            name="role"
+                                            value={formData.role}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="">Select Role</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="sales">Sales</option>
+                                            <option value="support">Support</option>
+                                        </Select>
+                                    </FormControl>
                                 </GridItem>
 
                                 <GridItem>
-                                    <Input type='text' name='location' placeholder="Enter your location" value={formData.location} onChange={handleChange} />
+                                    <FormControl>
+                                        <FormLabel>
+                                            User Location
+                                        </FormLabel>
+                                        <Input type='text' name='location' placeholder="Enter your location" value={formData.location} onChange={handleChange} />
+                                    </FormControl>
                                 </GridItem>
                                 <GridItem>
-                                    <Input type='tel' name='phone' placeholder="Enter your phone number" value={formData.phone} onChange={handleChange} />
+                                    <FormControl>
+                                        <FormLabel>
+                                            User Phone Number
+                                        </FormLabel>
+                                        <Input type='tel' name='phone' placeholder="Enter your phone number" value={formData.phone} onChange={handleChange} />
+                                    </FormControl>
                                 </GridItem>
                                 <GridItem>
-                                    <Input type='text' name='projects' placeholder="Enter your projects" value={formData.projects} onChange={handleChange} />
+                                    <FormControl>
+                                        <FormLabel>
+                                            User Projects
+                                        </FormLabel>
+                                        <Input type='text' name='projects' placeholder="Enter your projects" value={formData.projects} onChange={handleChange} />
+                                    </FormControl>
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                     <Flex justifyContent={"flex-end"}>

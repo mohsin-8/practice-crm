@@ -27,6 +27,10 @@ const Register = () => {
                         navigate("/dashboard");
                     } else if (role === "support") {
                         navigate("/dashboard");
+                    } else if (role === "team lead") {
+                        navigate("/dashboard");
+                    } else if (role === "manager") {
+                        navigate("/dashboard");
                     }
 
                     toast({
