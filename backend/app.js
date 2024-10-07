@@ -12,7 +12,9 @@ const PORT = process.env.PORT || 8080;
 // database connection
 DatabaseConnection();
 app.use(express.json());
-app.use(cors());
+app.use(cors(
+    { origin: "*" },
+));
 app.use("/auth", authRoutes);
 app.use("/", userRoutes);
 app.use("/project", projectsRoutes);
