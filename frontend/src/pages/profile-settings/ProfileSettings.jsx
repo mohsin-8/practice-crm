@@ -20,7 +20,7 @@ const ProfileSettings = () => {
     const [errors, setErrors] = useState({});
 
     const { isGetUser } = useSelector(state => state.auth);
-    console.log(isGetUser);
+
     const dispatch = useDispatch();
     const toast = useToast();
 

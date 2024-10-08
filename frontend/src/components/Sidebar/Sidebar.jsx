@@ -52,7 +52,7 @@ const Sidebar = () => {
                         </Box>
                         <UnorderedList listStyleType="none">
                             <ListItem marginBottom="15px">
-                                <Link to="/dashboard" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><GoProjectRoadmap size={20} /> Projects List</Link>
+                                <Link to="/projects" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><GoProjectRoadmap size={20} /> Projects List</Link>
                             </ListItem>
                             <ListItem marginBottom="15px">
                                 <Link to="/dashboard" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><IoCreateOutline size={20} /> Create Project</Link>
