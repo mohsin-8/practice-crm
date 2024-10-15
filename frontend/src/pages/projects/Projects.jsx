@@ -1,20 +1,46 @@
 import React, { useEffect } from 'react';
+import * as actionTypes from "../../redux/projects/projectsType";
+import moment from 'moment';
 import { useDispatch, useSelector } from "react-redux";
 import { GetProjectAction } from '../../redux/projects/projectsAction';
 import Layout from '../../components/Layout';
-import { Avatar, Box, Button, Flex, IconButton, Input, InputGroup, InputRightElement, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
-import { IoPencilOutline, IoSearch, IoTrashOutline } from 'react-icons/io5';
+import { Box, Button, Flex, IconButton, Input, InputGroup, InputRightElement, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useToast } from '@chakra-ui/react';
+import { IoCloseOutline, IoPencilOutline, IoSearch, IoTrashOutline } from 'react-icons/io5';
 import { FaEye } from 'react-icons/fa6';
+import { DeleteProjectUsers, DeleteProjectAction } from '../../redux/projects/projectsAction';
 
 const Projects = () => {
-    const { isProject, isLoadingProject } = useSelector(state => state.projects);
+    const { isProjects, isLoadingProject } = useSelector(state => state.projects);
     const dispatch = useDispatch();
-
-    console.log(isProject, "isProject");
+    const toast = useToast();
 
     useEffect(() => {
         dispatch(GetProjectAction());
     }, [dispatch]);
+
+    const onSuccessDeleteUser = (projectId, userId) => {
+        toast({
+            title: "User Delete Successfully",
+            description: "The user has been deleted.",
+            position: "top-right",
+            isClosable: true,
+            status: "error",
+            duration: 2500,
+        });
+        dispatch({
+            type: actionTypes.DELETE_PROJECTS_USER_SUCCESS,
+            payload: { projectId, userId }
+        });
+    };
+
+    const RemoveUser = (projectId, userId) => {
+        dispatch(DeleteProjectUsers(projectId, userId, onSuccessDeleteUser));
+    };
+
+    const DeleteProject = (id) => {
+        console.log("Delete The PrRoject", id);
+        dispatch(DeleteProjectAction(id));
+    };
 
     return (
         <Layout>
@@ -59,8 +85,8 @@ const Projects = () => {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {isProject?.length > 0 ? (
-                                        isProject?.map((data) => (
+                                    {isProjects?.length > 0 ? (
+                                        isProjects?.map((data) => (
                                             <Tr key={data?._id}>
                                                 <Td fontSize={"14px"} fontWeight={400}>{data?._id}</Td>
                                                 <Td>
@@ -77,21 +103,27 @@ const Projects = () => {
                                                             const lastNameInitial = nameParts.length > 1 ? nameParts[nameParts.length - 1]?.charAt(0).toUpperCase() : '';
 
                                                             return (
-                                                                <Text display={"flex"} alignItems={"center"} justifyContent={"center"} bg={"rgb(96, 93, 255)"} textAlign={"center"} color={"#ffffff"} w={"30px"} h={"30px"} borderRadius={"100px"} key={member?._id} fontSize={"14px"} fontWeight={400}>
-                                                                    {`${firstNameInitial}${lastNameInitial}`}
-                                                                </Text>
+                                                                <Box key={member?._id} position="relative" w={"30px"} h={"30px"} margin="5px" _hover={{ '.closeIcon': { display: 'flex', justifyContent: "center", alignItems: "center" } }}>
+                                                                    <Text display={"flex"} alignItems={"center"} justifyContent={"center"} bg={"rgb(96, 93, 255)"} textAlign={"center"} color={"#ffffff"} w={"100%"} h={"100%"} borderRadius={"100px"} fontSize={"14px"} fontWeight={400}>
+                                                                        {`${firstNameInitial}${lastNameInitial}`}
+                                                                    </Text>
+
+                                                                    <IconButton onClick={() => RemoveUser(data?._id, member?._id)} className="closeIcon" icon={<IoCloseOutline size={16} />} size="xs" colorScheme="red" position="absolute" top="-5px" right="-5px" display="none" aria-label="Remove" borderRadius={"100px"} />
+                                                                </Box>
                                                             );
                                                         })}
                                                     </Flex>
                                                 </Td>
-                                                <Td fontSize={"14px"} fontWeight={400}>location</Td>
-                                                <Td fontSize={"14px"} fontWeight={400}>phone</Td>
-                                                <Td fontSize={"14px"} fontWeight={400}>projects</Td>
-                                                <Td fontSize={"14px"} fontWeight={400}>8 OCT 2024</Td>
+                                                <Td fontSize={"14px"} fontWeight={400}>${data?.budget}</Td>
+                                                <Td fontSize={"14px"} fontWeight={400}>{moment(data.startDate).format("DD MMM YYYY")}</Td>
+                                                <Td fontSize={"14px"} fontWeight={400}>{moment(data.endDate).format("DD MMM YYYY")}</Td>
+                                                <Td>
+                                                    <Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} bgColor={data?.priorityStatus === "Active" ? "lightgreen" : "transparent" && data?.priorityStatus === "In Progress" ? "lightgrey" : "transparent" && data?.priorityStatus === "Completed" ? "lightskyblue" : "transparent"} fontSize={"14px"} fontWeight={400}>{data?.priorityStatus}</Text>
+                                                </Td>
                                                 <Td>
                                                     <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" />
                                                     <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" />
-                                                    <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" />
+                                                    <IconButton onClick={() => DeleteProject(data?._id)} variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" />
                                                 </Td>
                                             </Tr>
                                         ))
@@ -107,7 +139,7 @@ const Projects = () => {
                     </TableContainer>
 
                     <Flex justify="space-between" mt={4} alignItems="center">
-                        <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 5 of 12 results</Text>
+                        <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 5 of {isProjects?.length} results</Text>
                         <Flex>
                             <Button mr={2}>Previous</Button>
                             <Button>Next</Button>

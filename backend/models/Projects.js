@@ -34,7 +34,7 @@ const Projects = new mongoose.Schema({
     },
     priorityStatus: {
         type: String,
-        enum: ['High', 'Medium', 'Low'],
+        enum: ['Active', 'In Progress', 'Completed'],
         required: true
     },
     projectTags: {
