@@ -74,7 +74,7 @@ const EditProjectModal = ({ isOpen, onClose, projectId, refreshUpdateTableData }
     };
 
     const project_name = isProjects?.find(i => i?._id === projectId);
-    console.log(formData.projectTags);
+
     return (
         <Modal isCentered onClose={onClose} isOpen={isOpen} motionPreset='slideInBottom'>
             <ModalOverlay />
