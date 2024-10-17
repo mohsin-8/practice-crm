@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid, GridItem, HStack, Image, Text, FormControl, FormLabel, Input, Button, Alert, AlertIcon, Spinner, useToast } from '@chakra-ui/react';
+import { Helmet } from "react-helmet-async";
 import ForgotPasswordPageImage from "../../assets/images/forgot-password.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from 'react-router-dom';
@@ -54,57 +55,62 @@ const ResetPassword = () => {
     };
 
     return (
-        <HStack justifyContent={"center"} flexDir="column" h={"100vh"}>
-            <Box maxW={"1230px"} mx={"auto"}>
-                <Grid templateColumns='repeat(2, 1fr)' gap={10} alignItems={"center"}>
-                    <GridItem>
-                        <Image src={ForgotPasswordPageImage} alt="GoToLoginPageImage" borderRadius={"0.5rem"} />
-                    </GridItem>
-                    <GridItem>
-                        <Box>
-                            <Text fontSize={"28px"} mb={"5px"} fontWeight={"700"} color={"#343a40"}>Welcome to Trackly!</Text>
-                            <Text fontSize={"16px"} mb={"20px"} fontWeight={"500"} color={"#64748b"}>Please Reset your password.</Text>
-                            {isResetPasswordError && (
-                                <Alert status="error" mb="20px">
-                                    <AlertIcon />
-                                    {isResetPasswordError}
-                                </Alert>
-                            )}
-                            <form onSubmit={ForgotPasswordHandleSubmit}>
-                                <FormControl mb={"20px"}>
-                                    <FormLabel color={"#343a40"} fontSize={"14px"}>Password</FormLabel>
-                                    <Input
-                                        bgColor={"#fff"}
-                                        border={"1px solid #d5d9e2"}
-                                        color={"#000"}
-                                        h={"60px"}
-                                        placeholder="Type Password"
-                                        name="password"
-                                        type="password"
-                                        onChange={handleChange}
-                                    />
-                                    {errors.password && <Text color="red.500" fontSize="14px">{errors.password}</Text>}
-                                </FormControl>
-                                <Button
-                                    type="submit"
-                                    gap={"10px"}
-                                    bgColor={"#605dff"}
-                                    color={"#ffffff"}
-                                    borderRadius={"0.5rem"}
-                                    h={"50px"}
-                                    fontSize={"16px"}
-                                    fontWeight={"600"}
-                                    w={"100%"}
-                                    _hover={{ bgColor: "#524fd9" }}
-                                >
-                                    {isLoadingResetPassword ? <Spinner size="sm" color="white" /> : <>Reset Password</>}
-                                </Button>
-                            </form>
-                        </Box>
-                    </GridItem>
-                </Grid>
-            </Box>
-        </HStack>
+        <>
+            <Helmet>
+                <title>Reset Password</title>
+            </Helmet>
+            <HStack justifyContent={"center"} flexDir="column" h={"100vh"}>
+                <Box maxW={"1230px"} mx={"auto"}>
+                    <Grid templateColumns='repeat(2, 1fr)' gap={10} alignItems={"center"}>
+                        <GridItem>
+                            <Image src={ForgotPasswordPageImage} alt="GoToLoginPageImage" borderRadius={"0.5rem"} />
+                        </GridItem>
+                        <GridItem>
+                            <Box>
+                                <Text fontSize={"28px"} mb={"5px"} fontWeight={"700"} color={"#343a40"}>Welcome to Trackly!</Text>
+                                <Text fontSize={"16px"} mb={"20px"} fontWeight={"500"} color={"#64748b"}>Please Reset your password.</Text>
+                                {isResetPasswordError && (
+                                    <Alert status="error" mb="20px">
+                                        <AlertIcon />
+                                        {isResetPasswordError}
+                                    </Alert>
+                                )}
+                                <form onSubmit={ForgotPasswordHandleSubmit}>
+                                    <FormControl mb={"20px"}>
+                                        <FormLabel color={"#343a40"} fontSize={"14px"}>Password</FormLabel>
+                                        <Input
+                                            bgColor={"#fff"}
+                                            border={"1px solid #d5d9e2"}
+                                            color={"#000"}
+                                            h={"60px"}
+                                            placeholder="Type Password"
+                                            name="password"
+                                            type="password"
+                                            onChange={handleChange}
+                                        />
+                                        {errors.password && <Text color="red.500" fontSize="14px">{errors.password}</Text>}
+                                    </FormControl>
+                                    <Button
+                                        type="submit"
+                                        gap={"10px"}
+                                        bgColor={"#605dff"}
+                                        color={"#ffffff"}
+                                        borderRadius={"0.5rem"}
+                                        h={"50px"}
+                                        fontSize={"16px"}
+                                        fontWeight={"600"}
+                                        w={"100%"}
+                                        _hover={{ bgColor: "#524fd9" }}
+                                    >
+                                        {isLoadingResetPassword ? <Spinner size="sm" color="white" /> : <>Reset Password</>}
+                                    </Button>
+                                </form>
+                            </Box>
+                        </GridItem>
+                    </Grid>
+                </Box>
+            </HStack>
+        </>
     );
 };
 

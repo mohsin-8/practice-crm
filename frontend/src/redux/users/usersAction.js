@@ -1,6 +1,34 @@
 import * as actionTypes from "./usersTypes";
 import axiosInstance from "../../axiosInstance";
 
+export const GetUserDataAction = () => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.GET_USERS_DATA_LOADING
+        });
+        axiosInstance.get("/users")
+            .then((res) => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.GET_USERS_DATA_SUCCESS,
+                        payload: res.data
+                    });
+                } else {
+                    dispatch({
+                        type: actionTypes.GET_USERS_DATA_ERROR,
+                        payload: res.data.message
+                    });
+                }
+            })
+            .catch((error) => {
+                dispatch({
+                    type: actionTypes.GET_USERS_DATA_ERROR,
+                    payload: error.response?.data?.message || "Failed to fetch user data."
+                });
+            });
+    };
+};
+
 export const UserDataAction = () => {
     return (dispatch) => {
         dispatch({

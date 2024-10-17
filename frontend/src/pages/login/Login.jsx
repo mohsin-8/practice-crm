@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid, GridItem, HStack, Image, Link as ChakraLink, Text, FormControl, FormLabel, Input, Button, Alert, AlertIcon, Spinner, useToast } from '@chakra-ui/react';
+import { Helmet } from "react-helmet-async";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import GoToLoginPageImage from "../../assets/images/login.jpg";
 import { MdLogin } from "react-icons/md";
@@ -91,89 +92,94 @@ const Login = () => {
     };
 
     return (
-        <HStack justifyContent={"center"} flexDir="column" h={"100vh"}>
-            <Box maxW={"1230px"} mx={"auto"}>
-                <Grid templateColumns='repeat(2, 1fr)' gap={10} alignItems={"center"}>
-                    <GridItem>
-                        <Image src={GoToLoginPageImage} alt="GoToLoginPageImage" borderRadius={"0.5rem"} />
-                    </GridItem>
-                    <GridItem>
-                        <Box>
-                            <Text fontSize={"28px"} mb={"5px"} fontWeight={"700"} color={"#343a40"}>Welcome to Trackly!</Text>
-                            <Text fontSize={"16px"} mb={"20px"} fontWeight={"500"} color={"#64748b"}>Sign In credentials</Text>
-                            {isLoginError && (
-                                <Alert status="error" mb="20px">
-                                    <AlertIcon />
-                                    {isLoginError}
-                                </Alert>
-                            )}
-                            <form onSubmit={loginHandleSubmit}>
-                                <FormControl mb={"20px"} isInvalid={errors.email}>
-                                    <FormLabel color={"#343a40"} fontSize={"14px"}>Email Address</FormLabel>
-                                    <Input
-                                        bgColor={"#fff"}
-                                        border={"1px solid #d5d9e2"}
-                                        color={"#000"}
-                                        h={"60px"}
-                                        placeholder="example@trackly.com"
-                                        name="email"
-                                        type="email"
-                                        onChange={handleChange}
-                                    />
-                                    {errors.email && <Text color="red.500" fontSize="14px">{errors.email}</Text>}
-                                </FormControl>
-                                <FormControl mb={"20px"} isInvalid={errors.password}>
-                                    <FormLabel color={"#343a40"} fontSize={"14px"}>Password</FormLabel>
-                                    <Input
-                                        bgColor={"#fff"}
-                                        border={"1px solid #d5d9e2"}
-                                        color={"#000"}
-                                        h={"60px"}
-                                        placeholder="Type Password"
-                                        name="password"
-                                        type="password"
-                                        onChange={handleChange}
-                                    />
-                                    {errors.password && <Text color="red.500" fontSize="14px">{errors.password}</Text>}
-                                </FormControl>
-                                <Box mb={"20px"}>
-                                    <ChakraLink
-                                        as={RouterLink}
-                                        to="/forgot-password"
-                                        textDecor={"none !important"}
-                                        color={"#605dff"}
+        <>
+            <Helmet>
+                <title>Login</title>
+            </Helmet>
+            <HStack justifyContent={"center"} flexDir="column" h={"100vh"}>
+                <Box maxW={"1230px"} mx={"auto"}>
+                    <Grid templateColumns='repeat(2, 1fr)' gap={10} alignItems={"center"}>
+                        <GridItem>
+                            <Image src={GoToLoginPageImage} alt="GoToLoginPageImage" borderRadius={"0.5rem"} />
+                        </GridItem>
+                        <GridItem>
+                            <Box>
+                                <Text fontSize={"28px"} mb={"5px"} fontWeight={"700"} color={"#343a40"}>Welcome to Trackly!</Text>
+                                <Text fontSize={"16px"} mb={"20px"} fontWeight={"500"} color={"#64748b"}>Sign In credentials</Text>
+                                {isLoginError && (
+                                    <Alert status="error" mb="20px">
+                                        <AlertIcon />
+                                        {isLoginError}
+                                    </Alert>
+                                )}
+                                <form onSubmit={loginHandleSubmit}>
+                                    <FormControl mb={"20px"} isInvalid={errors.email}>
+                                        <FormLabel color={"#343a40"} fontSize={"14px"}>Email Address</FormLabel>
+                                        <Input
+                                            bgColor={"#fff"}
+                                            border={"1px solid #d5d9e2"}
+                                            color={"#000"}
+                                            h={"60px"}
+                                            placeholder="example@trackly.com"
+                                            name="email"
+                                            type="email"
+                                            onChange={handleChange}
+                                        />
+                                        {errors.email && <Text color="red.500" fontSize="14px">{errors.email}</Text>}
+                                    </FormControl>
+                                    <FormControl mb={"20px"} isInvalid={errors.password}>
+                                        <FormLabel color={"#343a40"} fontSize={"14px"}>Password</FormLabel>
+                                        <Input
+                                            bgColor={"#fff"}
+                                            border={"1px solid #d5d9e2"}
+                                            color={"#000"}
+                                            h={"60px"}
+                                            placeholder="Type Password"
+                                            name="password"
+                                            type="password"
+                                            onChange={handleChange}
+                                        />
+                                        {errors.password && <Text color="red.500" fontSize="14px">{errors.password}</Text>}
+                                    </FormControl>
+                                    <Box mb={"20px"}>
+                                        <ChakraLink
+                                            as={RouterLink}
+                                            to="/forgot-password"
+                                            textDecor={"none !important"}
+                                            color={"#605dff"}
+                                            fontSize={"16px"}
+                                            fontWeight={"500"}
+                                        >
+                                            Forgot Password?
+                                        </ChakraLink>
+                                    </Box>
+                                    <Button
+                                        type="submit"
+                                        gap={"10px"}
+                                        bgColor={"#605dff"}
+                                        color={"#ffffff"}
+                                        borderRadius={"0.5rem"}
+                                        h={"50px"}
                                         fontSize={"16px"}
-                                        fontWeight={"500"}
+                                        fontWeight={"600"}
+                                        w={"100%"}
+                                        _hover={{ bgColor: "#524fd9" }}
+                                        disabled={isLoadingLogin}
                                     >
-                                        Forgot Password?
-                                    </ChakraLink>
-                                </Box>
-                                <Button
-                                    type="submit"
-                                    gap={"10px"}
-                                    bgColor={"#605dff"}
-                                    color={"#ffffff"}
-                                    borderRadius={"0.5rem"}
-                                    h={"50px"}
+                                        {isLoadingLogin ? <Spinner size="sm" color="white" /> : <><MdLogin size={18} /> Sign In</>}
+                                    </Button>
+                                </form>
+                                <Text mt={"20px"}>Don’t have an account? <ChakraLink as={RouterLink} to="/register"
+                                    textDecor={"none !important"}
+                                    color={"#605dff"}
                                     fontSize={"16px"}
-                                    fontWeight={"600"}
-                                    w={"100%"}
-                                    _hover={{ bgColor: "#524fd9" }}
-                                    disabled={isLoadingLogin}
-                                >
-                                    {isLoadingLogin ? <Spinner size="sm" color="white" /> : <><MdLogin size={18} /> Sign In</>}
-                                </Button>
-                            </form>
-                            <Text mt={"20px"}>Don’t have an account? <ChakraLink as={RouterLink} to="/register"
-                                textDecor={"none !important"}
-                                color={"#605dff"}
-                                fontSize={"16px"}
-                                fontWeight={"500"}>Sign Up</ChakraLink></Text>
-                        </Box>
-                    </GridItem>
-                </Grid>
-            </Box>
-        </HStack>
+                                    fontWeight={"500"}>Sign Up</ChakraLink></Text>
+                            </Box>
+                        </GridItem>
+                    </Grid>
+                </Box>
+            </HStack>
+        </>
     );
 };
 

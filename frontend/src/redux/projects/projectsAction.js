@@ -34,7 +34,7 @@ export const GetProjectAction = () => {
     };
 };
 
-export const DeleteProjectAction = (id) => {
+export const DeleteProjectAction = (id, onSuccess) => {
     return (dispatch) => {
         dispatch({
             type: actionTypes.DELETE_PROJECTS_LOADING
@@ -49,8 +49,9 @@ export const DeleteProjectAction = (id) => {
                 if (res.status === 200) {
                     dispatch({
                         type: actionTypes.DELETE_PROJECTS_SUCCESS,
-                        payload: res.data
+                        payload: { id }
                     });
+                    onSuccess();
                 } else {
                     dispatch({
                         type: actionTypes.DELETE_PROJECTS_FAILED,

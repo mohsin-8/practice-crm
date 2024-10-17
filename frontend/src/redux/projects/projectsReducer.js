@@ -54,7 +54,7 @@ export const projectReducer = (state = initialState, action) => {
         case actionTypes.DELETE_PROJECTS_SUCCESS:
             return {
                 ...state,
-                isProjects: state.isProjects.map(project => [...project, project.filter(i => i._id !== action.payload.id)]),
+                isProjects: state.isProjects.filter(project => project._id !== payload.id),
                 isLoadingDeleteProject: false
             };
         case actionTypes.DELETE_PROJECTS_FAILED:

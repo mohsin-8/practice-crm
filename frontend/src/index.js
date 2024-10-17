@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from '@chakra-ui/react';
 import store from "./redux/store";
+import { HelmetProvider } from 'react-helmet-async';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +14,9 @@ root.render(
     <Provider store={store}>
       <BrowserRouter>
         <ChakraProvider>
-          <App />
+          <HelmetProvider>
+            <App />
+          </HelmetProvider>
         </ChakraProvider>
       </BrowserRouter>
     </Provider>

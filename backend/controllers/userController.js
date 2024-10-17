@@ -76,3 +76,12 @@ exports.CreateNewUser = async (req, res) => {
         res.status(500).send({ message: error.message });
     };
 };
+
+exports.FetchingAssignMembers = async (req, res) => {
+    try {
+        const user = await UserModel.find({}, "name _id");
+        return res.status(200).send(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
