@@ -34,10 +34,30 @@ exports.CreateProject = async (req, res) => {
     }
 };
 
+exports.UpdateProject = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { projectName, startDate, endDate, projectDescription, budget, categories, priorityStatus, assignMembers, projectTags } = req.body;
+        if (!projectName || !startDate || !endDate || !projectDescription || !budget || !categories || !assignMembers || !priorityStatus || !projectTags) {
+            return res.status(404).json({ message: "send all required fields" });
+        }
+
+        const updateProjects = await ProjectModel.findByIdAndUpdate(id, req.body);
+        if (!updateProjects) {
+            return res.status(404).json({ message: "project not found" });
+        }
+
+        return res.status(200).send({ message: "project updated succesfully" });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};
+
 exports.GetAllProjects = async (req, res) => {
     try {
         const projects = await ProjectModel.find()
             .populate('assignMembers', 'name')
+            .populate('projectTags', 'name')
             .populate('createdBy', 'name');
 
         res.status(200).json(projects);

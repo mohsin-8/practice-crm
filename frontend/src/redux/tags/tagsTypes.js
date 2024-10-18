@@ -1,0 +1,3 @@
+export const GET_TAGS_LOADING = "GET_TAGS_LOADING";
+export const GET_TAGS_SUCCESS = "GET_TAGS_SUCCESS";
+export const GET_TAGS_ERROR = "GET_TAGS_ERROR";

@@ -38,8 +38,11 @@ const Projects = new mongoose.Schema({
         required: true
     },
     projectTags: {
-        type: [String],
-        required: false,
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Tags',
+            required: false
+        }],
     },
     projectPreviewImage: {
         type: String,

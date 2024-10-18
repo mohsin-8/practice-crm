@@ -6,43 +6,43 @@ import {
     ModalHeader,
     ModalBody,
     ModalCloseButton,
-    Input,
     Box,
     HStack,
     Text,
     Flex,
+    Input,
 } from '@chakra-ui/react';
+import { useDispatch, useSelector } from "react-redux";
 import { IoCloseOutline } from 'react-icons/io5';
-import { useDispatch, useSelector } from 'react-redux';
-import { GetUserDataAction } from '../redux/users/usersAction';
 import { FiPlus } from 'react-icons/fi';
+import { GetTagsAction } from '../redux/tags/tagsAction';
 
-const AddingUsers = ({ isOpen, onClose, projectId }) => {
-    const [searchTerm, setSearchTerm] = useState("");
+const AddingTags = ({ projectId, isOpen, onClose }) => {
     const [openSearchBar, setOpenSearchBar] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const { isProjects } = useSelector(state => state.projects);
+    const { isGetTags } = useSelector(state => state.tags);
 
     const dispatch = useDispatch();
 
-    const { isProjects } = useSelector(state => state.projects);
-    const { isGetUser } = useSelector(state => state.user);
-
     useEffect(() => {
-        dispatch(GetUserDataAction());
+        dispatch(GetTagsAction());
     }, [dispatch]);
-
-    const project_users = isProjects?.find(i => i._id === projectId);
-
-    const filteredUsers = isGetUser?.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const handleOpenSearch = () => {
         setOpenSearchBar(!openSearchBar);
     };
 
+    const project_tags = isProjects?.find(i => i._id === projectId);
+
+    const filteredTags = isGetTags?.filter(tag => tag?.name?.toLowerCase().includes(searchTerm.toLowerCase()));
+
     return (
         <Modal onClose={onClose} isOpen={isOpen} isCentered>
             <ModalOverlay />
             <ModalContent h={"500px"}>
-                <ModalHeader>Add New Members</ModalHeader>
+                <ModalHeader>Add New Tags</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <Box cursor={"pointer"} borderRadius={"100px"} w={"38px"} h={"38px"} border={"2px solid rgb(96, 93, 255)"} display={"flex"} justifyContent={"center"} alignItems={"center"} onClick={handleOpenSearch}>
@@ -60,40 +60,40 @@ const AddingUsers = ({ isOpen, onClose, projectId }) => {
                             width="100%"
                             p="10px"
                         >
-                            <Input type="text" placeholder="Search for users..." onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} w={"100%"} h={"45px"} />
+                            <Input type='text' placeholder='Search For Tags...' onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} />
 
                             <Box mt="10px">
-                                {filteredUsers?.length > 0 ? (
-                                    filteredUsers.map(user => {
-                                        const removeSelectedUser = project_users?.assignMembers?.find(i => i?._id === user?._id);
-                                        return !removeSelectedUser ? (
-                                            <Box key={user?._id} cursor="pointer" p={2} borderRadius={"4px"} _hover={{ bg: "rgb(96, 93, 255)", color: "#ffffff" }}>
-                                                {user.name}
+                                {filteredTags?.length > 0 ? (
+                                    filteredTags.map((tag) => {
+                                        const isTagInProject = project_tags?.projectTags?.find(i => i?._id === tag?._id);
+                                        return !isTagInProject ? (
+                                            <Box key={tag?._id} cursor="pointer" p={2} borderRadius={"4px"} _hover={{ bg: "rgb(96, 93, 255)", color: "#ffffff" }}>
+                                                {tag?.name}
                                             </Box>
                                         ) : null;
                                     })
                                 ) : (
-                                    <Box p={2}>No users found</Box>
+                                    <Box p={2}>Press Space bar or comma to create a new tag</Box>
                                 )}
                             </Box>
                         </Box>
                     )}
                     <Box mt="30px">
                         <HStack alignItems={"center"} gap={"8px"} flexWrap={"wrap"} justifyContent={"space-between"}>
-                            {project_users?.assignMembers?.map((data) => {
+                            {project_tags?.projectTags?.map((tag, index) => {
                                 return (
-                                    <Flex key={data?._id} alignItems={"center"} justifyContent={"space-between"} bgColor={"#f6f7f9"} w={"150px"} h={"40px"} p={"12px"} borderRadius={"5px"} _hover={{ bgColor: "gray.200" }}>
-                                        <Text fontSize={"14px"} fontWeight={400}>{data?.name}</Text>
+                                    <Flex key={index} alignItems={"center"} justifyContent={"space-between"} bgColor={"#f6f7f9"} w={"150px"} h={"40px"} p={"12px"} borderRadius={"5px"} _hover={{ bgColor: "gray.200" }}>
+                                        <Text fontSize={"14px"} fontWeight={400}>{tag.name}</Text>
                                         <IoCloseOutline cursor={"pointer"} size={20} fontWeight={900} color='rgb(96, 93, 255)' />
                                     </Flex>
-                                )
+                                );
                             })}
                         </HStack>
                     </Box>
                 </ModalBody>
             </ModalContent>
         </Modal>
-    )
-}
+    );
+};
 
-export default AddingUsers;
+export default AddingTags;

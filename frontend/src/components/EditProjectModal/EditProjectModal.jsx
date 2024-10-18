@@ -25,6 +25,7 @@ import { useSelector } from 'react-redux';
 import { IoCloseOutline } from 'react-icons/io5';
 import { FiPlus } from "react-icons/fi";
 import AddingUsers from '../AddingUsers';
+import AddingTags from '../AddingTags';
 
 const EditProjectModal = ({ isOpen, onClose, projectId, refreshUpdateTableData }) => {
     const [formData, setFormData] = useState({
@@ -38,11 +39,10 @@ const EditProjectModal = ({ isOpen, onClose, projectId, refreshUpdateTableData }
         priorityStatus: '',
         projectTags: []
     });
-    const {
-        isOpen: isAddingUsersOpen,
-        onOpen: onAddingUsersOpen,
-        onClose: onAddingUsersClose
-    } = useDisclosure();
+
+    const { isOpen: isAddingUsersOpen, onOpen: onAddingUsersOpen, onClose: onAddingUsersClose } = useDisclosure();
+    const { isOpen: isAddingTagsOpen, onOpen: onAddingTagsOpen, onClose: onAddingTagsClose } = useDisclosure();
+
     const { isProjects } = useSelector(state => state.projects);
 
     useEffect(() => {
@@ -203,21 +203,32 @@ const EditProjectModal = ({ isOpen, onClose, projectId, refreshUpdateTableData }
                                     <FormLabel>Project Tags</FormLabel>
                                     <Flex alignItems={"center"} justifyContent={"space-between"} mt={"15px"}>
                                         <Flex alignItems={"center"} gap={"10px"}>
-                                            {formData?.projectTags?.map((data, index) => {
+                                            {formData?.projectTags?.map((data) => {
                                                 return (
-                                                    <Box key={index} position="relative" zIndex={0} w={"100px"} h={"30px"} _hover={{ pos: "relative", zIndex: "1", '.closeIcon': { display: 'flex', justifyContent: "center", alignItems: "center" } }}>
+                                                    <Box key={data?._id} position="relative" zIndex={0} w={"100px"} h={"30px"} _hover={{ pos: "relative", zIndex: "1", '.closeIcon': { display: 'flex', justifyContent: "center", alignItems: "center" } }}>
                                                         <Text display={"flex"} alignItems={"center"} justifyContent={"center"} bg={"rgb(96, 93, 255)"} textAlign={"center"} color={"#ffffff"} w={"100%"} h={"100%"} borderRadius={"2px"} fontSize={"14px"} fontWeight={400}>
-                                                            {data}
+                                                            {data?.name}
                                                         </Text>
                                                         <IconButton className="closeIcon" icon={<IoCloseOutline size={16} />} size={"s"} colorScheme="red" position="absolute" top="-5px" right="-2px" display="none" aria-label="Remove" borderRadius={"100px"} />
                                                     </Box>
                                                 )
                                             })}
                                         </Flex>
-                                        <Box display={"flex"} cursor={"pointer"} alignItems={"center"} justifyContent={"center"} bgColor={"transparent"} border={"2px solid rgb(96, 93, 255)"} borderRadius={"100px"} w={"30px"} h={"30px"}>
+                                        <Box display={"flex"} cursor={"pointer"} alignItems={"center"} justifyContent={"center"} bgColor={"transparent"} border={"2px solid rgb(96, 93, 255)"} borderRadius={"100px"} w={"30px"} h={"30px"} onClick={onAddingTagsOpen}>
                                             <FiPlus color='rgb(96, 93, 255)' size={16} />
                                         </Box>
+                                        <AddingTags projectId={projectId} isOpen={isAddingTagsOpen} onClose={onAddingTagsClose} />
                                     </Flex>
+                                </FormControl>
+                            </GridItem>
+                            <GridItem>
+                                <FormControl>
+                                    <FormLabel>Created By</FormLabel>
+                                    {project_name?.createdBy?.map(data => {
+                                        return (
+                                            <Box key={data?._id} bgColor={"gray.200"} border={"2px solid rgb(230 230 231)"} p={"6px"}>{data?.name}</Box>
+                                        )
+                                    })}
                                 </FormControl>
                             </GridItem>
                             <GridItem colSpan={2}>

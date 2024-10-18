@@ -4,7 +4,11 @@ const initialState = {
     isLoadingProject: false,
     isProjects: null,
     isLoadingProjectUser: false,
-    isLoadingDeleteProject: false
+    isLoadingDeleteProject: false,
+    isLoadingGetTags: false,
+    isGetTags: null,
+    isLoadingUpdateProjects: false,
+    isUpdateProjects: null
 };
 
 export const projectReducer = (state = initialState, action) => {
@@ -61,6 +65,23 @@ export const projectReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoadingDeleteProject: false,
+            };
+
+        case actionTypes.UPDATE_PROJECTS_LOADING:
+            return {
+                ...state,
+                isLoadingUpdateProjects: true
+            };
+        case actionTypes.UPDATE_PROJECTS_SUCCESS:
+            return {
+                ...state,
+                isUpdateProjects: payload,
+                isLoadingUpdateProjects: false
+            };
+        case actionTypes.UPDATE_PROJECTS_FAILED:
+            return {
+                ...state,
+                isLoadingUpdateProjects: false,
             };
         default:
             return state;
