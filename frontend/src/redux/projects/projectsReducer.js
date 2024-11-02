@@ -8,7 +8,7 @@ const initialState = {
     isLoadingGetTags: false,
     isGetTags: null,
     isLoadingUpdateProjects: false,
-    isUpdateProjects: null
+    isUpdateProjects: null,
 };
 
 export const projectReducer = (state = initialState, action) => {
@@ -82,6 +82,23 @@ export const projectReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoadingUpdateProjects: false,
+            };
+
+        case actionTypes.DELETE_PROJECTS_TAG_LOADING:
+            return {
+                ...state,
+                isLoadingProjectUser: true
+            };
+        case actionTypes.DELETE_PROJECTS_TAG_SUCCESS:
+            return {
+                ...state,
+                isProjects: state.isProjects.map(project => project._id === action.payload.projectId ? { ...project, projectTags: project.projectTags.filter(tag => tag._id !== action.payload.tagId) } : project),
+                isLoadingProjectUser: false
+            };
+        case actionTypes.DELETE_PROJECTS_TAG_FAILED:
+            return {
+                ...state,
+                isLoadingProjectUser: false,
             };
         default:
             return state;

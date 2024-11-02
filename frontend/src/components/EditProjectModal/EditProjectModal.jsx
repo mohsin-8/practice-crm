@@ -17,15 +17,17 @@ import {
     ModalOverlay,
     Select,
     Text,
-    useDisclosure
+    useDisclosure,
+    useToast
 } from '@chakra-ui/react';
 
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IoCloseOutline } from 'react-icons/io5';
 import { FiPlus } from "react-icons/fi";
 import AddingUsers from '../AddingUsers';
 import AddingTags from '../AddingTags';
+import { DeleteProjectTag } from '../../redux/projects/projectsAction';
 
 const EditProjectModal = ({ isOpen, onClose, projectId, refreshUpdateTableData }) => {
     const [formData, setFormData] = useState({
@@ -43,6 +45,8 @@ const EditProjectModal = ({ isOpen, onClose, projectId, refreshUpdateTableData }
     const { isOpen: isAddingUsersOpen, onOpen: onAddingUsersOpen, onClose: onAddingUsersClose } = useDisclosure();
     const { isOpen: isAddingTagsOpen, onOpen: onAddingTagsOpen, onClose: onAddingTagsClose } = useDisclosure();
 
+    const dispatch = useDispatch();
+    const toast = useToast();
     const { isProjects } = useSelector(state => state.projects);
 
     useEffect(() => {
@@ -74,6 +78,20 @@ const EditProjectModal = ({ isOpen, onClose, projectId, refreshUpdateTableData }
     };
 
     const project_name = isProjects?.find(i => i?._id === projectId);
+
+    const onSuccessTagsDeleteFromProject = () => {
+        toast({
+            title: "Delete Tag from Project Successfully",
+            position: "top-right",
+            isClosable: true,
+            status: "success",
+            duration: 2000
+        });
+    }
+
+    const DeleteTagFromProject = (tagId) => {
+        dispatch(DeleteProjectTag(tagId, projectId, onSuccessTagsDeleteFromProject));
+    };
 
     return (
         <Modal isCentered onClose={onClose} isOpen={isOpen} motionPreset='slideInBottom'>
@@ -209,7 +227,7 @@ const EditProjectModal = ({ isOpen, onClose, projectId, refreshUpdateTableData }
                                                         <Text display={"flex"} alignItems={"center"} justifyContent={"center"} bg={"rgb(96, 93, 255)"} textAlign={"center"} color={"#ffffff"} w={"100%"} h={"100%"} borderRadius={"2px"} fontSize={"14px"} fontWeight={400}>
                                                             {data?.name}
                                                         </Text>
-                                                        <IconButton className="closeIcon" icon={<IoCloseOutline size={16} />} size={"s"} colorScheme="red" position="absolute" top="-5px" right="-2px" display="none" aria-label="Remove" borderRadius={"100px"} />
+                                                        <IconButton onClick={() => DeleteTagFromProject(data?._id)} className="closeIcon" icon={<IoCloseOutline size={16} />} size={"s"} colorScheme="red" position="absolute" top="-5px" right="-2px" display="none" aria-label="Remove" borderRadius={"100px"} />
                                                     </Box>
                                                 )
                                             })}

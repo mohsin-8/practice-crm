@@ -102,35 +102,36 @@ export const DeleteProjectUsers = (projectId, userId, onSuccessDeleteUser) => {
     };
 };
 
-// export const UpdateProjectAction = () => {
-//     return (dispatch) => {
-//         dispatch({
-//             type: actionTypes.GET_PROJECTS_LOADING
-//         });
-//         const accessToken = localStorage.getItem("accessToken");
-//         axiosInstance.get("/project", {
-//             headers: {
-//                 Authorization: `Bearer ${accessToken}`
-//             }
-//         })
-//             .then((res) => {
-//                 if (res.status === 200) {
-//                     dispatch({
-//                         type: actionTypes.GET_PROJECTS_SUCCESS,
-//                         payload: res.data
-//                     });
-//                 } else {
-//                     dispatch({
-//                         type: actionTypes.GET_PROJECTS_FAILED,
-//                         payload: res.data.message
-//                     });
-//                 };
-//             })
-//             .catch((error) => {
-//                 dispatch({
-//                     type: actionTypes.GET_PROJECTS_FAILED,
-//                     payload: error.response?.data?.message || "Failed to fetch projects data."
-//                 });
-//             });
-//     };
-// };
+export const DeleteProjectTag = (tagId, projectId, onSuccessTagsDeleteFromProject) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.DELETE_PROJECTS_TAG_LOADING
+        });
+        const accessToken = localStorage.getItem("accessToken");
+        axiosInstance.delete(`/project/${projectId}/tag/${tagId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+            .then((res) => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.DELETE_PROJECTS_TAG_SUCCESS,
+                        payload: { projectId, tagId }
+                    });
+                    onSuccessTagsDeleteFromProject();
+                } else {
+                    dispatch({
+                        type: actionTypes.DELETE_PROJECTS_TAG_FAILED,
+                        payload: res.data.message
+                    });
+                }
+            })
+            .catch((error) => {
+                dispatch({
+                    type: actionTypes.DELETE_PROJECTS_TAG_FAILED,
+                    payload: error.response?.data?.message || "Failed to delete tag from projects"
+                });
+            });
+    };
+};

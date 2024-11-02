@@ -119,4 +119,29 @@ exports.DeleteProjectById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+};
+
+exports.DeleteProjectTagsById = async (req, res) => {
+    const { projectId, tagId } = req.params;
+
+    try {
+        const project = await ProjectModel.findById(projectId);
+
+        if (!project) {
+            return res.status(404).json({ message: "Project not found" });
+        }
+
+        const isTagAssigned = project.projectTags.includes(tagId);
+        if (!isTagAssigned) {
+            return res.status(404).json({ message: "Tag not assigned to this project" });
+        }
+
+        project.projectTags = project.projectTags.filter(tag => tag.toString() !== tagId);
+
+        await project.save();
+
+        res.status(200).json({ message: "Tag removed from project successfully", project });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

@@ -2,7 +2,8 @@ import * as actionTypes from "./tagsTypes";
 
 const initialState = {
     isLoadingGetTags: false,
-    isGetTags: null
+    isGetTags: null,
+    isTagsDelete: null
 };
 
 export const TagsReducer = (state = initialState, action) => {
@@ -24,7 +25,6 @@ export const TagsReducer = (state = initialState, action) => {
                 ...state,
                 isLoadingGetTags: false
             }
-
         default:
             return state;
     };

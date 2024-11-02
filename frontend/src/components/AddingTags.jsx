@@ -11,11 +11,13 @@ import {
     Text,
     Flex,
     Input,
+    useToast,
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from "react-redux";
 import { IoCloseOutline } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { GetTagsAction } from '../redux/tags/tagsAction';
+import { DeleteProjectTag } from '../redux/projects/projectsAction';
 
 const AddingTags = ({ projectId, isOpen, onClose }) => {
     const [openSearchBar, setOpenSearchBar] = useState(false);
@@ -23,8 +25,8 @@ const AddingTags = ({ projectId, isOpen, onClose }) => {
 
     const { isProjects } = useSelector(state => state.projects);
     const { isGetTags } = useSelector(state => state.tags);
-
     const dispatch = useDispatch();
+    const toast = useToast();
 
     useEffect(() => {
         dispatch(GetTagsAction());
@@ -37,6 +39,20 @@ const AddingTags = ({ projectId, isOpen, onClose }) => {
     const project_tags = isProjects?.find(i => i._id === projectId);
 
     const filteredTags = isGetTags?.filter(tag => tag?.name?.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const onSuccessTagsDeleteFromProject = () => {
+        toast({
+            title: "Delete Tag from Project Successfully",
+            position: "top-right",
+            isClosable: true,
+            status: "success",
+            duration: 2000
+        });
+    }
+
+    const DeleteTagFromProject = (tagId) => {
+        dispatch(DeleteProjectTag(tagId, projectId, onSuccessTagsDeleteFromProject));
+    };
 
     return (
         <Modal onClose={onClose} isOpen={isOpen} isCentered>
@@ -84,7 +100,7 @@ const AddingTags = ({ projectId, isOpen, onClose }) => {
                                 return (
                                     <Flex key={index} alignItems={"center"} justifyContent={"space-between"} bgColor={"#f6f7f9"} w={"150px"} h={"40px"} p={"12px"} borderRadius={"5px"} _hover={{ bgColor: "gray.200" }}>
                                         <Text fontSize={"14px"} fontWeight={400}>{tag.name}</Text>
-                                        <IoCloseOutline cursor={"pointer"} size={20} fontWeight={900} color='rgb(96, 93, 255)' />
+                                        <IoCloseOutline cursor={"pointer"} size={20} fontWeight={900} color='rgb(96, 93, 255)' onClick={() => DeleteTagFromProject(tag?._id)} />
                                     </Flex>
                                 );
                             })}

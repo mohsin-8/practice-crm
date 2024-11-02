@@ -11,6 +11,7 @@ import Users from './pages/Users/Users';
 import AddNewUser from './pages/Users/AddNewUser';
 import ProfileSettings from './pages/profile-settings/ProfileSettings';
 import Projects from './pages/projects/Projects';
+import Leads from './pages/leads/leads';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/profile-settings" element={<ProfileSettings />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/leads" element={<Leads />} />
 
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/hr/users" element={<Users />} />
