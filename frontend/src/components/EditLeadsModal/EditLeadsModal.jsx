@@ -12,7 +12,8 @@ import {
     ModalCloseButton,
     ModalContent,
     ModalHeader,
-    ModalOverlay
+    ModalOverlay,
+    Select
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 
@@ -53,6 +54,8 @@ const EditLeadsModal = ({ isOpen, onClose, LeadId }) => {
             [name]: value
         }));
     };
+
+    const status_arr = ["confirmed", "in progress", "rejected"];
 
     return (
         <Modal isCentered onClose={onClose} isOpen={isOpen} motionPreset='slideInBottom'>
@@ -100,7 +103,13 @@ const EditLeadsModal = ({ isOpen, onClose, LeadId }) => {
                             <GridItem>
                                 <FormControl>
                                     <FormLabel>Status</FormLabel>
-                                    <Input type='text' name='status' placeholder="Enter customer status" value={formData.status} onChange={handleInputChange} />
+                                    <Select name='status' value={formData.status} textTransform={"capitalize"} onChange={handleInputChange}>
+                                        {status_arr?.map((status, index) => {
+                                            return (
+                                                <option key={index}>{status}</option>
+                                            )
+                                        })}
+                                    </Select>
                                 </FormControl>
                             </GridItem>
                             <GridItem colSpan={2}>
