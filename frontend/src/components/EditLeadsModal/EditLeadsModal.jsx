@@ -13,11 +13,13 @@ import {
     ModalContent,
     ModalHeader,
     ModalOverlay,
-    Select
+    Select,
+    useToast
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { LeadUpdateAction } from "../../redux/leads/leadsAction";
 
-const EditLeadsModal = ({ isOpen, onClose, LeadId }) => {
+const EditLeadsModal = ({ isOpen, onClose, LeadId, refreshUpdateTableData }) => {
     const [formData, setFormData] = useState({
         customer: "",
         email: "",
@@ -26,8 +28,14 @@ const EditLeadsModal = ({ isOpen, onClose, LeadId }) => {
         lead_source: "",
         status: "",
     });
+
+    const dispatch = useDispatch();
+    const toast = useToast();
+
     const { isGetAllLeads } = useSelector(state => state.leads);
+
     const lead_name = isGetAllLeads?.find(i => i?._id === LeadId);
+    const status_arr = ["confirmed", "in progress", "rejected"];
 
     useEffect(() => {
         if (LeadId) {
@@ -55,7 +63,22 @@ const EditLeadsModal = ({ isOpen, onClose, LeadId }) => {
         }));
     };
 
-    const status_arr = ["confirmed", "in progress", "rejected"];
+    const onSuccess = () => {
+        toast({
+            title: "Lead has been updated Successfully",
+            position: "top-right",
+            isClosable: true,
+            status: "success",
+            duration: 2000
+        });
+        refreshUpdateTableData();
+    };
+
+    const handleEditSubmit = (e) => {
+        e.preventDefault();
+        dispatch(LeadUpdateAction(LeadId, onSuccess, formData));
+        onClose();
+    };
 
     return (
         <Modal isCentered onClose={onClose} isOpen={isOpen} motionPreset='slideInBottom'>
@@ -68,7 +91,7 @@ const EditLeadsModal = ({ isOpen, onClose, LeadId }) => {
                 </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <form>
+                    <form onSubmit={handleEditSubmit}>
                         <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                             <GridItem>
                                 <FormControl>

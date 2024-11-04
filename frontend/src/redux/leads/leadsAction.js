@@ -59,3 +59,57 @@ export const LeadGetAllAction = () => {
             });
     };
 };
+
+export const LeadUpdateAction = (id, onSuccess, formData) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.UPDATE_LEADS_LOADING
+        });
+        axiosInstance.put(`/leads/update/${id}`, formData).then((res) => {
+            if (res.status === 200) {
+                dispatch({
+                    type: actionTypes.UPDATE_LEADS_SUCCESS,
+                    payload: res.data
+                });
+                onSuccess();
+            } else {
+                dispatch({
+                    type: actionTypes.UPDATE_LEADS_FAILED,
+                    payload: res.data.message
+                });
+            }
+        }).catch((error) => {
+            dispatch({
+                type: actionTypes.UPDATE_LEADS_FAILED,
+                payload: error.response?.data?.message || "Failed to update lead data."
+            })
+        })
+    }
+};
+
+export const LeadDeleteAction = (id, onSuccess) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.DELETE_LEADS_LOADING
+        });
+        axiosInstance.delete(`/leads/delete/${id}`).then((res) => {
+            if (res.status === 200) {
+                dispatch({
+                    type: actionTypes.DELETE_LEADS_SUCCESS,
+                    payload: id
+                });
+                onSuccess();
+            } else {
+                dispatch({
+                    type: actionTypes.DELETE_LEADS_FAILED,
+                    payload: res.data.message
+                });
+            }
+        }).catch((error) => {
+            dispatch({
+                type: actionTypes.DELETE_LEADS_FAILED,
+                payload: error.response?.data?.message || "Failed to update lead data."
+            })
+        })
+    }
+};

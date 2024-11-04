@@ -18,6 +18,7 @@ import {
     IconButton,
     Button,
     useDisclosure,
+    Spinner,
 } from '@chakra-ui/react';
 import { IoPencilOutline, IoSearch, IoTrashOutline } from 'react-icons/io5';
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +26,7 @@ import { Link } from 'react-router-dom';
 import { LeadGetAllAction } from '../../redux/leads/leadsAction';
 import moment from 'moment';
 import EditLeadsModal from '../../components/EditLeadsModal/EditLeadsModal';
+import DeleteLeadsModal from '../../components/DeleteLeadsModal/DeleteLeadsModal';
 
 const Leads = () => {
     const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -33,7 +35,7 @@ const Leads = () => {
     const dispatch = useDispatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const { isGetAllLeads } = useSelector(state => state.leads);
+    const { isGetAllLeads, isLoadingGetAllLeads } = useSelector(state => state.leads);
 
     useEffect(() => {
         dispatch(LeadGetAllAction());
@@ -47,6 +49,10 @@ const Leads = () => {
     const handleCloseEditModal = () => {
         setEditModalOpen(false);
         setEditLeadModalId(null);
+    };
+
+    const refreshUpdateTableData = () => {
+        dispatch(LeadGetAllAction());
     };
 
     return (
@@ -87,57 +93,61 @@ const Leads = () => {
                     </Flex>
                     <Box p={4}>
                         <TableContainer border="1px solid #d5d9e2" borderRadius="15px" bgColor="white">
-                            <Table variant="simple">
-                                <Thead bg="gray.100">
-                                    <Tr>
-                                        <Th fontSize={"14px"} fontWeight={600}>User ID</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>User</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Email</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Role</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Location</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Projects</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Join Date</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Action</Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {isGetAllLeads?.length > 0 ? (
-                                        isGetAllLeads?.map(data => {
-                                            return (
-                                                <Tr key={data?._id}>
-                                                    <Td fontSize={"14px"} fontWeight={400}>{data?._id}</Td>
-                                                    <Td>
-                                                        <Flex alignItems="center">
-                                                            {/* <Avatar size="sm" src={user.avatar} mr={3} /> */}
-                                                            <Text fontSize={"14px"} fontWeight={400}>{data?.customer}</Text>
-                                                        </Flex>
-                                                    </Td>
-                                                    <Td fontSize={"14px"} fontWeight={400}>{data?.email}</Td>
-                                                    <Td fontSize={"14px"} fontWeight={400}>{data?.phone}</Td>
-                                                    <Td fontSize={"14px"} fontWeight={400}>{moment(data.createdAt).format("DD MMM YYYY")}</Td>
-                                                    <Td fontSize={"14px"} fontWeight={400}>{data?.company}</Td>
-                                                    <Td fontSize={"14px"} fontWeight={400}>{data?.lead_source}</Td>
-                                                    <Td><Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} bgColor={data?.status === "confirmed" ? "lightgreen" : "transparent" && data?.status === "in progress" ? "lightgrey" : "transparent" && data?.status === "pending" ? "lightskyblue" : "transparent" && data?.status === "rejected" ? "red.400" : "transparent"} fontSize={"14px"} fontWeight={400}>{data?.status}</Text></Td>
-                                                    <Td>
-                                                        <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" mr={2} onClick={() => handleOpenEditModal(data?._id)} />
-                                                        <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" onClick={() => { setEditLeadModalId(data?._id); onOpen(); }} />
-                                                    </Td>
-                                                </Tr>
-                                            )
-                                        })
-                                    ) : (
+                            {isLoadingGetAllLeads ? (
+                                <Spinner size="xl" />
+                            ) : (
+                                <Table variant="simple">
+                                    <Thead bg="gray.100">
                                         <Tr>
-                                            <Td colSpan={9} textAlign="center">
-                                                <Text fontSize="22px" fontWeight={700} color={"#000000"}>No Leads Found!</Text>
-                                            </Td>
+                                            <Th fontSize={"14px"} fontWeight={600}>User ID</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>User</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Email</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Role</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Location</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Projects</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Join Date</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Action</Th>
                                         </Tr>
-                                    )}
-                                </Tbody>
-                            </Table>
+                                    </Thead>
+                                    <Tbody>
+                                        {isGetAllLeads?.length > 0 ? (
+                                            isGetAllLeads?.map(data => {
+                                                return (
+                                                    <Tr key={data?._id}>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?._id}</Td>
+                                                        <Td>
+                                                            <Flex alignItems="center">
+                                                                {/* <Avatar size="sm" src={user.avatar} mr={3} /> */}
+                                                                <Text fontSize={"14px"} fontWeight={400}>{data?.customer}</Text>
+                                                            </Flex>
+                                                        </Td>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?.email}</Td>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?.phone}</Td>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{moment(data.createdAt).format("DD MMM YYYY")}</Td>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?.company}</Td>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?.lead_source}</Td>
+                                                        <Td><Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} bgColor={data?.status === "confirmed" ? "lightgreen" : "transparent" && data?.status === "in progress" ? "lightgrey" : "transparent" && data?.status === "pending" ? "lightskyblue" : "transparent" && data?.status === "rejected" ? "red.400" : "transparent"} fontSize={"14px"} fontWeight={400}>{data?.status}</Text></Td>
+                                                        <Td>
+                                                            <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" mr={2} onClick={() => handleOpenEditModal(data?._id)} />
+                                                            <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" onClick={() => { setEditLeadModalId(data?._id); onOpen(); }} />
+                                                        </Td>
+                                                    </Tr>
+                                                )
+                                            })
+                                        ) : (
+                                            <Tr>
+                                                <Td colSpan={9} textAlign="center">
+                                                    <Text fontSize="22px" fontWeight={700} color={"#000000"}>No Leads Found!</Text>
+                                                </Td>
+                                            </Tr>
+                                        )}
+                                    </Tbody>
+                                </Table>
+                            )}
                         </TableContainer>
-                        <EditLeadsModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} LeadId={isEditLeadModalId} />
-
+                        <EditLeadsModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} LeadId={isEditLeadModalId} refreshUpdateTableData={refreshUpdateTableData} />
+                            <DeleteLeadsModal isOpen={isOpen} onClose={onClose} leadId={isEditLeadModalId} />
                         <Flex justify="space-between" mt={4} alignItems="center">
                             <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 5 of 1 results</Text>
                             <Flex>
