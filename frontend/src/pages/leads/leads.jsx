@@ -81,7 +81,7 @@ const Leads = () => {
                             </InputRightElement>
                         </InputGroup>
 
-                        <Link to="/hr/users/add-new"
+                        <Link to="/lead/add-new"
                             style={{
                                 border: "1px solid rgb(96, 93, 255)",
                                 fontSize: "16px",
@@ -147,7 +147,7 @@ const Leads = () => {
                             )}
                         </TableContainer>
                         <EditLeadsModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} LeadId={isEditLeadModalId} refreshUpdateTableData={refreshUpdateTableData} />
-                            <DeleteLeadsModal isOpen={isOpen} onClose={onClose} leadId={isEditLeadModalId} />
+                        <DeleteLeadsModal isOpen={isOpen} onClose={onClose} leadId={isEditLeadModalId} refreshUpdateTableData={refreshUpdateTableData} />
                         <Flex justify="space-between" mt={4} alignItems="center">
                             <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 5 of 1 results</Text>
                             <Flex>

@@ -35,7 +35,7 @@ const EditLeadsModal = ({ isOpen, onClose, LeadId, refreshUpdateTableData }) => 
     const { isGetAllLeads } = useSelector(state => state.leads);
 
     const lead_name = isGetAllLeads?.find(i => i?._id === LeadId);
-    const status_arr = ["confirmed", "in progress", "rejected"];
+    const status_arr = ["confirmed", "in progress", "rejected", "pending"];
 
     useEffect(() => {
         if (LeadId) {

@@ -12,6 +12,7 @@ import AddNewUser from './pages/Users/AddNewUser';
 import ProfileSettings from './pages/profile-settings/ProfileSettings';
 import Projects from './pages/projects/Projects';
 import Leads from './pages/leads/leads';
+import AddNewLead from './components/AddNewLead/AddNewLead';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/profile-settings" element={<ProfileSettings />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/leads" element={<Leads />} />
+        <Route path="/lead/add-new" element={<AddNewLead />} />
 
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/hr/users" element={<Users />} />

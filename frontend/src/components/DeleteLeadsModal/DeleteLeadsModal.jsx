@@ -3,7 +3,7 @@ import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, 
 import { useDispatch } from 'react-redux';
 import { LeadDeleteAction } from '../../redux/leads/leadsAction';
 
-const DeleteLeadsModal = ({ isOpen, onClose, leadId }) => {
+const DeleteLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => {
     const dispatch = useDispatch();
     const toast = useToast();
 
@@ -15,6 +15,7 @@ const DeleteLeadsModal = ({ isOpen, onClose, leadId }) => {
             status: "success",
             duration: 2000
         });
+        refreshUpdateTableData();
     };
 
     const handleDeleteLead = () => {
