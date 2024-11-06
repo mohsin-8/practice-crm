@@ -20,3 +20,12 @@ exports.CreateOrder = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.GetAllOrderList = async (req, res) => {
+    try {
+        const order = await OrderModel.find({});
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

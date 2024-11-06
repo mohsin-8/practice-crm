@@ -1,18 +1,19 @@
 import * as actionTypes from "./leadsType";
 import axiosInstance from "../../axiosInstance";
 
-export const LeadCreateAction = () => {
+export const LeadCreateAction = (formData, onSuccess) => {
     return (dispatch) => {
         dispatch({
             type: actionTypes.CREATE_LEADS_LOADING
         });
-        axiosInstance.post("/leads/create")
+        axiosInstance.post("/leads/create", formData)
             .then((res) => {
                 if (res.status === 200) {
                     dispatch({
                         type: actionTypes.CREATE_LEADS_SUCCESS,
                         payload: res.data
                     });
+                    onSuccess();
                 } else {
                     dispatch({
                         type: actionTypes.CREATE_LEADS_FAILED,

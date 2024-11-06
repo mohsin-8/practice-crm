@@ -89,7 +89,7 @@ const Leads = () => {
                                 color: "rgb(96, 93, 255)",
                                 borderRadius: "100px",
                                 padding: "0.5rem 1.5rem"
-                            }}>+ Add New User</Link>
+                            }}>+ Add New Lead</Link>
                     </Flex>
                     <Box p={4}>
                         <TableContainer border="1px solid #d5d9e2" borderRadius="15px" bgColor="white">
@@ -99,14 +99,14 @@ const Leads = () => {
                                 <Table variant="simple">
                                     <Thead bg="gray.100">
                                         <Tr>
-                                            <Th fontSize={"14px"} fontWeight={600}>User ID</Th>
-                                            <Th fontSize={"14px"} fontWeight={600}>User</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>#ID</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Customer</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Email</Th>
-                                            <Th fontSize={"14px"} fontWeight={600}>Role</Th>
-                                            <Th fontSize={"14px"} fontWeight={600}>Location</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
-                                            <Th fontSize={"14px"} fontWeight={600}>Projects</Th>
-                                            <Th fontSize={"14px"} fontWeight={600}>Join Date</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Created At</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Company</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Lead Source</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Status</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Action</Th>
                                         </Tr>
                                     </Thead>
@@ -149,7 +149,7 @@ const Leads = () => {
                         <EditLeadsModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} LeadId={isEditLeadModalId} refreshUpdateTableData={refreshUpdateTableData} />
                         <DeleteLeadsModal isOpen={isOpen} onClose={onClose} leadId={isEditLeadModalId} refreshUpdateTableData={refreshUpdateTableData} />
                         <Flex justify="space-between" mt={4} alignItems="center">
-                            <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 5 of 1 results</Text>
+                            <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 1 of {isGetAllLeads?.length} results</Text>
                             <Flex>
                                 <Button mr={2}>Previous</Button>
                                 <Button>Next</Button>

@@ -4,13 +4,15 @@ import { userReducer } from "./users/usersReducer";
 import { projectReducer } from "./projects/projectsReducer";
 import { TagsReducer } from "./tags/tagsReducer";
 import { leadReducer } from "./leads/leadsReducer";
+import { orderReducer } from "./order/orderReducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
     user: userReducer,
     projects: projectReducer,
     tags: TagsReducer,
-    leads: leadReducer
+    leads: leadReducer,
+    order: orderReducer
 });
 
 export default rootReducer;

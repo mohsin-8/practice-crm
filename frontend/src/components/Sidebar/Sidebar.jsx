@@ -2,8 +2,8 @@ import React from 'react';
 import { Box, Button, Image, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
 import LogoIcon from "../../assets/images/logo-icon.png";
 import { Link, useNavigate } from 'react-router-dom';
-import { IoMdContacts, IoIosLogOut } from "react-icons/io";
-import { RiCustomerService2Line } from "react-icons/ri";
+import { IoIosLogOut } from "react-icons/io";
+import { FaTrophy } from "react-icons/fa";
 import { SiGoogleads } from "react-icons/si";
 import { GoProjectRoadmap } from "react-icons/go";
 import { IoCreateOutline, IoPersonSharp } from "react-icons/io5"
@@ -37,6 +37,9 @@ const Sidebar = () => {
                         <UnorderedList listStyleType="none">
                             <ListItem marginBottom="15px">
                                 <Link to="/leads" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><SiGoogleads size={20} /> Leads</Link>
+                            </ListItem>
+                            <ListItem marginBottom="15px">
+                                <Link to="/sales/orders" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><FaTrophy size={20} /> Order List</Link>
                             </ListItem>
                         </UnorderedList>
                     </Box>

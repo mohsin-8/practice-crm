@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import Layout from '../../components/Layout';
 import { Box, Button, FormControl, FormLabel, Grid, GridItem, Input, Select, Text, useToast } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
+import { LeadCreateAction } from '../../redux/leads/leadsAction';
+import { useNavigate } from 'react-router-dom';
 
 const AddNewLead = () => {
-    const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", leadSource: "", status: "" });
+    const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", lead_source: "", status: "" });
     const [errors, setErrors] = useState({});
 
     const dispatch = useDispatch();
     const toast = useToast();
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,8 +34,58 @@ const AddNewLead = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const validate = () => {
+        let errors = {};
+
+        if (!formData.email) {
+            errors.email = "Please enter your email.";
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            errors.email = "Please enter a valid email address.";
+        }
+
+        if (!formData.customer) {
+            errors.customer = "Please enter customer name.";
+        }
+
+        if (!formData.company) {
+            errors.company = "Please enter company name.";
+        }
+
+        if (!formData.lead_source) {
+            errors.lead_source = "Please enter Lead Source.";
+        }
+
+        if (!formData.status) {
+            errors.status = "Please select status.";
+        }
+
+        if (!formData.phone) {
+            errors.phone = "Please enter phone number.";
+        } else if (!/^\d{10}$/.test(formData.phone)) {
+            errors.phone = "Please enter a valid 10-digit phone number.";
+        }
+
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const onSuccess = () => {
+        toast({
+            title: "New Lead has been Added",
+            position: "top-right",
+            isClosable: true,
+            status: "success",
+            duration: 2000
+        });
+        navigate("/leads");
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (validate()) {
+            dispatch(LeadCreateAction(formData, onSuccess));
+        }
+        console.log(formData, "formData");
     };
 
     return (
@@ -55,6 +108,7 @@ const AddNewLead = () => {
                                     onChange={handleChange}
                                     value={formData.customer}
                                 />
+                                {errors.customer && <Text color="red.500" fontSize="14px">{errors.customer}</Text>}
                             </FormControl>
                         </GridItem>
                         <GridItem>
@@ -68,8 +122,8 @@ const AddNewLead = () => {
                                     onChange={handleChange}
                                     value={formData.email}
                                 />
+                                {errors.email && <Text color="red.500" fontSize="14px">{errors.email}</Text>}
                             </FormControl>
-
                         </GridItem>
                         <GridItem>
                             <FormControl>
@@ -82,6 +136,7 @@ const AddNewLead = () => {
                                     onChange={handleChange}
                                     value={formData.phone}
                                 />
+                                {errors.phone && <Text color="red.500" fontSize="14px">{errors.phone}</Text>}
                             </FormControl>
                         </GridItem>
                         <GridItem>
@@ -95,6 +150,7 @@ const AddNewLead = () => {
                                     onChange={handleChange}
                                     value={formData.company}
                                 />
+                                {errors.company && <Text color="red.500" fontSize="14px">{errors.company}</Text>}
                             </FormControl>
                         </GridItem>
                         <GridItem>
@@ -106,8 +162,9 @@ const AddNewLead = () => {
                                     h={"50px"}
                                     name='lead_source'
                                     onChange={handleChange}
-                                    value={formData.leadSource}
+                                    value={formData.lead_source}
                                 />
+                                {errors.lead_source && <Text color="red.500" fontSize="14px">{errors.lead_source}</Text>}
                             </FormControl>
                         </GridItem>
                         <GridItem>
@@ -125,6 +182,7 @@ const AddNewLead = () => {
                                     <option value="pending">pending</option>
                                     <option value="rejected">rejected</option>
                                 </Select>
+                                {errors.status && <Text color="red.500" fontSize="14px">{errors.status}</Text>}
                             </FormControl>
                         </GridItem>
                     </Grid>
