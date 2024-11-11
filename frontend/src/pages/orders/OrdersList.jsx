@@ -1,29 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '../../components/Layout';
-import {
-    Box,
-    Flex,
-    Input,
-    InputGroup,
-    InputRightElement,
-    Text,
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer,
-    IconButton,
-    Button,
-    useDisclosure,
-    Spinner,
-} from '@chakra-ui/react';
+import { Box, Flex, Input, InputGroup, InputRightElement, Text, Table, Thead, Tbody, Tr, Th, Td, TableContainer, IconButton, Button } from '@chakra-ui/react';
 import { IoPencilOutline, IoSearch, IoTrashOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
+import { LeadGetAllAction } from '../../redux/order/orderAction';
 
 const OrdersList = () => {
+    const { isGetAllOrder } = useSelector(state => state.order);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(LeadGetAllAction());
+    }, [dispatch]);
+
+    console.log(isGetAllOrder);
     return (
         <>
             <Helmet>
@@ -65,37 +58,44 @@ const OrdersList = () => {
                             <Table variant="simple">
                                 <Thead bg="gray.100">
                                     <Tr>
-                                        <Th fontSize={"14px"} fontWeight={600}>#ID</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Customer</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Email</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Created At</Th>
+                                        <Th fontSize={"14px"} fontWeight={600}>Lead Id</Th>
+                                        <Th fontSize={"14px"} fontWeight={600}>Order No.</Th>
+                                        <Th fontSize={"14px"} fontWeight={600}>Client Name</Th>
+                                        <Th fontSize={"14px"} fontWeight={600}>Total Amount</Th>
                                         <Th fontSize={"14px"} fontWeight={600}>Company</Th>
-                                        <Th fontSize={"14px"} fontWeight={600}>Lead Source</Th>
+                                        <Th fontSize={"14px"} fontWeight={600}>Created By</Th>
                                         <Th fontSize={"14px"} fontWeight={600}>Status</Th>
+                                        <Th fontSize={"14px"} fontWeight={600}>Created At</Th>
                                         <Th fontSize={"14px"} fontWeight={600}>Action</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    <Tr>
-                                        <Td fontSize={"14px"} fontWeight={400}>data</Td>
-                                        <Td>
-                                            <Flex alignItems="center">
-                                                {/* <Avatar size="sm" src={user.avatar} mr={3} /> */}
-                                                <Text fontSize={"14px"} fontWeight={400}>data</Text>
-                                            </Flex>
-                                        </Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>data</Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>data</Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>data</Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>data</Td>
-                                        <Td fontSize={"14px"} fontWeight={400}>data</Td>
-                                        <Td><Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} fontSize={"14px"} fontWeight={400}>data</Text></Td>
-                                        <Td>
-                                            <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" mr={2} />
-                                            <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" />
-                                        </Td>
-                                    </Tr>
+                                    {isGetAllOrder?.length > 0 ? (
+                                        isGetAllOrder?.map(data => {
+                                            return (
+                                                <Tr key={data?._id}>
+                                                    <Td fontSize={"14px"} fontWeight={400}>{data?.leadId}</Td>
+                                                    <Td fontSize={"14px"} fontWeight={400}>{data?._id}</Td>
+                                                    <Td fontSize={"14px"} fontWeight={400}>{data?.customer}</Td>
+                                                    <Td fontSize={"14px"} fontWeight={400}>data</Td>
+                                                    <Td fontSize={"14px"} fontWeight={400}>data</Td>
+                                                    <Td fontSize={"14px"} fontWeight={400}>data</Td>
+                                                    <Td fontSize={"14px"} fontWeight={400}>data</Td>
+                                                    <Td><Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} fontSize={"14px"} fontWeight={400}>data</Text></Td>
+                                                    <Td>
+                                                        <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" mr={2} />
+                                                        <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" />
+                                                    </Td>
+                                                </Tr>
+                                            )
+                                        })
+                                    ) : (
+                                        <Tr>
+                                            <Td colSpan={9} textAlign="center">
+                                                <Text fontSize="22px" fontWeight={700} color={"#000000"}>No Leads Found!</Text>
+                                            </Td>
+                                        </Tr>
+                                    )}
                                 </Tbody>
                             </Table>
                         </TableContainer>

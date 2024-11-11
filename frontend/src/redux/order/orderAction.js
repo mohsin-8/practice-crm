@@ -6,7 +6,7 @@ export const LeadGetAllAction = () => {
         dispatch({
             type: actionTypes.GET_ALL_ORDER_LOADING
         });
-        axiosInstance.get("/order/list")
+        axiosInstance.get("/order/get-all")
             .then((res) => {
                 if (res.status === 200) {
                     dispatch({

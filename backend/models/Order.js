@@ -6,6 +6,11 @@ const OrderSchema = new mongoose.Schema({
         ref: 'Leads',
         required: true,
     },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Leads',
+        required: true,
+    },
     items: [
         {
             productId: {
@@ -52,6 +57,15 @@ const OrderSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
+    createdBy: {
+        type: String,
+        required: true
+    },
+    leadId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Leads',
+        required: true,
+    }
 }, { timestamps: true, });
 
 const OrderModel = mongoose.model("Order", OrderSchema);

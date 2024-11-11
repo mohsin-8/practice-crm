@@ -2,16 +2,19 @@ const OrderModel = require("../models/Order");
 
 exports.CreateOrder = async (req, res) => {
     try {
-        const { customer, items, status, payment, orderDate, deliveryDate, totalAmount } = req.body;
+        const { customer, company, items, status, payment, orderDate, deliveryDate, totalAmount, createdBy, leadId } = req.body;
 
         const order = new OrderModel({
             customer,
+            company,
             items,
             status,
             payment,
             orderDate,
             deliveryDate,
-            totalAmount
+            totalAmount,
+            createdBy,
+            leadId
         });
 
         await order.save();
@@ -21,9 +24,10 @@ exports.CreateOrder = async (req, res) => {
     }
 };
 
-exports.GetAllOrderList = async (req, res) => {
+exports.GetAllOrder = async (req, res) => {
     try {
         const order = await OrderModel.find({});
+
         res.status(200).json(order);
     } catch (error) {
         res.status(500).json({ message: error.message });
