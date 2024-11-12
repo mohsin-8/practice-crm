@@ -19,21 +19,21 @@ const OrderSchema = new mongoose.Schema({
                 required: true,
             },
             price: {
-                type: Number,
-                required: true,
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Products',
                 min: 0,
             }
         },
     ],
     status: {
         type: String,
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+        enum: ['Pending', 'Processing', 'Delivered', 'Cancelled'],
         default: 'Pending',
     },
     payment: {
         method: {
             type: String,
-            enum: ['Credit Card', 'PayPal', 'Bank Transfer', 'Cash on Delivery'],
+            enum: ['Credit Card', 'Bank Transfer'],
             required: true,
         },
         status: {
@@ -48,9 +48,6 @@ const OrderSchema = new mongoose.Schema({
     orderDate: {
         type: Date,
         default: Date.now,
-    },
-    deliveryDate: {
-        type: Date,
     },
     totalAmount: {
         type: Number,

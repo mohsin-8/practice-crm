@@ -1,7 +1,7 @@
 import * as actionTypes from "./orderTypes";
 import axiosInstance from "../../axiosInstance";
 
-export const LeadGetAllAction = () => {
+export const OrderGetAllAction = () => {
     return (dispatch) => {
         dispatch({
             type: actionTypes.GET_ALL_ORDER_LOADING
