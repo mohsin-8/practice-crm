@@ -10,43 +10,77 @@ import {
     Input,
     Select,
     Text,
+    useToast,
 } from '@chakra-ui/react';
-import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
-import stripePromise from '../../StripeConfig';
+import { Helmet } from 'react-helmet-async';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useDispatch } from 'react-redux';
+import { OrderCreateAction } from '../../redux/order/orderAction';
+
+const stripePromise = loadStripe("pk_test_51OgMexK2Ly0dfRbQMdqgWw8zkB803zYXBTkeP5Zs5fxWwOjg9ZzofoLxXE8PiCkc0QacOVAKVZHkXJIuLAKjiD7V00oZKibKn6");
 
 const AddNewOrder = () => {
+    const [formData, setFormData] = useState({
+        customer: "",
+        company: "",
+        items: [{ productId: "", price: "" }],
+        status: "Pending",
+        payment: { method: "Credit Card", status: "Unpaid", transactionId: "" },
+        totalAmount: "",
+        createdBy: "",
+        leadId: ""
+    });
+
+    const dispatch = useDispatch();
     const stripe = useStripe();
     const elements = useElements();
-
-    const [formData, setFormData] = useState({
-        customer: '',
-        company: '',
-        items: [{ productId: '', price: '' }],
-        status: 'Pending',
-        paymentMethod: 'Credit Card',
-        totalAmount: '',
-        createdBy: '',
-        leadId: '',
-    });
+    const toast = useToast();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const [mainKey, subKey] = name.split('.');
+
+        setFormData((prevData) => {
+            if (subKey) {
+                return {
+                    ...prevData,
+                    [mainKey]: {
+                        ...prevData[mainKey],
+                        [subKey]: value,
+                    },
+                };
+            }
+            return { ...prevData, [name]: value };
+        });
     };
 
     const handleItemChange = (index, e) => {
-        const newItems = [...formData.items];
-        newItems[index][e.target.name] = e.target.value;
-        setFormData({ ...formData, items: newItems });
+        const { name, value } = e.target;
+        const updatedItems = formData.items.map((item, idx) =>
+            idx === index ? { ...item, [name]: value } : item
+        );
+        setFormData((prevData) => ({ ...prevData, items: updatedItems }));
     };
 
-    const addNewItem = () => {
-        setFormData({ ...formData, items: [...formData.items, { productId: '', price: '' }] });
+    const addItem = () => {
+        setFormData((prevData) => ({
+            ...prevData,
+            items: [...prevData.items, { productId: "", price: "" }],
+        }));
+    };
+
+    const onSuccess = () => {
+        toast({
+            title: "Order Successfully Created",
+            position: "top-right",
+            isClosable: true,
+            status: "success",
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!stripe || !elements) return;
 
         const cardElement = elements.getElement(CardElement);
@@ -56,46 +90,32 @@ const AddNewOrder = () => {
         });
 
         if (error) {
-            console.error(error);
+            console.error(error.message);
             return;
         }
 
-        try {
-            const response = await fetch('/api/orders', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    payment: {
-                        method: formData.paymentMethod,
-                        status: 'Unpaid',
-                        transactionId: paymentMethod.id,
-                    },
-                }),
-            });
-
-            if (response.ok) {
-                console.log('Order created successfully!');
-            } else {
-                console.error('Failed to create order');
-            }
-        } catch (error) {
-            console.error('Error creating order:', error);
-        }
+        dispatch(OrderCreateAction({
+            ...formData,
+            payment: {
+                ...formData.payment,
+                transactionId: paymentMethod.id,
+            },
+            onSuccess
+        }));
+        console.log("Order created successfully");
     };
 
     return (
-        <Layout>
-            <Elements stripe={stripePromise}>
-                <Box m={'1.5rem 0px'}>
-                    <Text fontSize={'18px'} fontWeight={700}>
-                        Add New Order
-                    </Text>
+        <>
+            <Helmet>
+                <title>Add New Order</title>
+            </Helmet>
+            <Layout>
+                <Box m="1.5rem 0px">
+                    <Text fontSize="18px" fontWeight={700}>Add New Order</Text>
                 </Box>
 
-                <Box p={'1.5rem'} bgColor={'#ffffff'} borderRadius={'0.5rem'}>
+                <Box p="1.5rem" bgColor="#ffffff" borderRadius="0.5rem">
                     <form onSubmit={handleSubmit}>
                         <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                             <GridItem>
@@ -103,8 +123,6 @@ const AddNewOrder = () => {
                                     <FormLabel>Customer</FormLabel>
                                     <Input
                                         type="text"
-                                        w={'100%'}
-                                        h={'50px'}
                                         name="customer"
                                         value={formData.customer}
                                         onChange={handleChange}
@@ -116,47 +134,49 @@ const AddNewOrder = () => {
                                     <FormLabel>Company</FormLabel>
                                     <Input
                                         type="text"
-                                        w={'100%'}
-                                        h={'50px'}
                                         name="company"
                                         value={formData.company}
                                         onChange={handleChange}
                                     />
                                 </FormControl>
                             </GridItem>
-
-                            {formData.items.map((item, index) => (
-                                <GridItem key={index} colSpan={2}>
-                                    <FormControl>
-                                        <FormLabel>Item {index + 1}</FormLabel>
-                                        <Input
-                                            type="text"
-                                            placeholder="Product ID"
-                                            name="productId"
-                                            value={item.productId}
-                                            onChange={(e) => handleItemChange(index, e)}
-                                            mb={2}
-                                        />
-                                        <Input
-                                            type="number"
-                                            placeholder="Price"
-                                            name="price"
-                                            value={item.price}
-                                            onChange={(e) => handleItemChange(index, e)}
-                                        />
-                                    </FormControl>
-                                </GridItem>
-                            ))}
-                            <Button mt={4} onClick={addNewItem}>
-                                Add Another Item
-                            </Button>
+                            <GridItem colSpan={2}>
+                                <FormControl>
+                                    <FormLabel>Items</FormLabel>
+                                    {formData.items.map((item, index) => (
+                                        <Box key={index} mb={4}>
+                                            <Input
+                                                type="text"
+                                                placeholder="Product ID"
+                                                name="productId"
+                                                value={item.productId}
+                                                onChange={(e) => handleItemChange(index, e)}
+                                                mb={2}
+                                            />
+                                            <Input
+                                                type="text"
+                                                placeholder="Price"
+                                                name="price"
+                                                value={item.price}
+                                                onChange={(e) => handleItemChange(index, e)}
+                                            />
+                                        </Box>
+                                    ))}
+                                    <Button type="button" onClick={addItem}>Add Item</Button>
+                                </FormControl>
+                            </GridItem>
+                            <GridItem colSpan={2}>
+                                <FormControl>
+                                    <FormLabel>Card Details</FormLabel>
+                                    <CardElement />
+                                </FormControl>
+                            </GridItem>
 
                             <GridItem>
                                 <FormControl>
                                     <FormLabel>Status</FormLabel>
                                     <Select
                                         name="status"
-                                        h={'50px'}
                                         value={formData.status}
                                         onChange={handleChange}
                                     >
@@ -171,9 +191,8 @@ const AddNewOrder = () => {
                                 <FormControl>
                                     <FormLabel>Payment Method</FormLabel>
                                     <Select
-                                        name="paymentMethod"
-                                        h={'50px'}
-                                        value={formData.paymentMethod}
+                                        name="payment.method"
+                                        value={formData.payment.method}
                                         onChange={handleChange}
                                     >
                                         <option value="Credit Card">Credit Card</option>
@@ -183,37 +202,58 @@ const AddNewOrder = () => {
                             </GridItem>
                             <GridItem>
                                 <FormControl>
+                                    <FormLabel>Payment Status</FormLabel>
+                                    <Select
+                                        name="payment.status"
+                                        value={formData.payment.status}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="Unpaid">Unpaid</option>
+                                        <option value="Paid">Paid</option>
+                                        <option value="Refunded">Refunded</option>
+                                    </Select>
+                                </FormControl>
+                            </GridItem>
+                            <GridItem colSpan={2}>
+                                <FormControl>
                                     <FormLabel>Total Amount</FormLabel>
                                     <Input
                                         type="number"
-                                        w={'100%'}
-                                        h={'50px'}
                                         name="totalAmount"
+                                        min="0"
                                         value={formData.totalAmount}
                                         onChange={handleChange}
                                     />
                                 </FormControl>
                             </GridItem>
-                            <GridItem>
+                            <GridItem colSpan={2}>
+                                <FormControl>
+                                    <FormLabel>Transaction ID (for Bank Transfer)</FormLabel>
+                                    <Input
+                                        type="text"
+                                        name="payment.transactionId"
+                                        value={formData.payment.transactionId}
+                                        onChange={handleChange}
+                                        isDisabled={formData.payment.method === 'Credit Card'}
+                                    />
+                                </FormControl>
+                            </GridItem>
+                            <GridItem colSpan={2}>
                                 <FormControl>
                                     <FormLabel>Created By</FormLabel>
                                     <Input
                                         type="text"
-                                        w={'100%'}
-                                        h={'50px'}
                                         name="createdBy"
                                         value={formData.createdBy}
                                         onChange={handleChange}
                                     />
                                 </FormControl>
                             </GridItem>
-                            <GridItem>
+                            <GridItem colSpan={2}>
                                 <FormControl>
-                                    <FormLabel>Lead ID</FormLabel>
+                                    <FormLabel>Lead #ID</FormLabel>
                                     <Input
                                         type="text"
-                                        w={'100%'}
-                                        h={'50px'}
                                         name="leadId"
                                         value={formData.leadId}
                                         onChange={handleChange}
@@ -222,17 +262,12 @@ const AddNewOrder = () => {
                             </GridItem>
                         </Grid>
 
-                        <Box mt={'30px'}>
-                            <CardElement />
-                        </Box>
-
-                        <Box mt={'30px'}>
+                        <Box mt="30px">
                             <Button
-                                w={'100%'}
-                                bg={'rgb(96, 93, 255)'}
+                                w="100%"
+                                bg="rgb(96, 93, 255)"
                                 _hover={{ bg: 'rgb(96, 93, 255)' }}
-                                color={'#ffffff'}
-                                h={'50px'}
+                                color="#ffffff"
                                 type="submit"
                             >
                                 Add New Order
@@ -240,9 +275,13 @@ const AddNewOrder = () => {
                         </Box>
                     </form>
                 </Box>
-            </Elements>
-        </Layout>
+            </Layout>
+        </>
     );
 };
-
-export default AddNewOrder;
+const AddNewOrderWithStripe = () => (
+    <Elements stripe={stripePromise}>
+        <AddNewOrder />
+    </Elements>
+);
+export default AddNewOrderWithStripe;
