@@ -18,6 +18,7 @@ const DeleteLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) =
         refreshUpdateTableData();
     };
 
+
     const handleDeleteLead = () => {
         dispatch(LeadDeleteAction(leadId, onSuccess));
         onClose();
