@@ -17,7 +17,6 @@ const OrdersList = () => {
         dispatch(OrderGetAllAction());
     }, [dispatch]);
 
-    console.log(isGetAllOrder);
     return (
         <>
             <Helmet>
@@ -70,7 +69,6 @@ const OrdersList = () => {
                                             <Th fontSize={"14px"} fontWeight={600}>Created By</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Status</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Created At</Th>
-                                            {/* <Th fontSize={"14px"} fontWeight={600}>Action</Th> */}
                                         </Tr>
                                     </Thead>
                                     <Tbody>
@@ -86,10 +84,6 @@ const OrdersList = () => {
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.createdBy}</Td>
                                                         <Td><Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} bgColor={data?.status === "Pending" ? "lightgrey" : "transparent" && data?.status === "Processing" ? "lightskyblue" : "transparent" && data?.status === "Delivered" ? "lightgreen" : "transparent" && data?.status === "Cancelled" ? "red.400" : "transparent"} fontSize={"14px"} fontWeight={400}>{data?.status}</Text></Td>
                                                         <Td><Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} fontSize={"14px"} fontWeight={400}>{moment(data.createdAt).format("DD MMM YYYY")}</Text></Td>
-                                                        {/* <Td>
-                                                            <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" mr={2} />
-                                                            <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" />
-                                                        </Td> */}
                                                     </Tr>
                                                 )
                                             })

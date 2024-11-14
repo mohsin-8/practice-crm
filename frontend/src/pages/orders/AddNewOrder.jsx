@@ -17,8 +17,9 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useDispatch } from 'react-redux';
 import { OrderCreateAction } from '../../redux/order/orderAction';
+import { useNavigate } from 'react-router-dom';
 
-const stripePromise = loadStripe("pk_test_51OgMexK2Ly0dfRbQMdqgWw8zkB803zYXBTkeP5Zs5fxWwOjg9ZzofoLxXE8PiCkc0QacOVAKVZHkXJIuLAKjiD7V00oZKibKn6");
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHEABLE_KEY);
 
 const AddNewOrder = () => {
     const [formData, setFormData] = useState({
@@ -36,6 +37,7 @@ const AddNewOrder = () => {
     const stripe = useStripe();
     const elements = useElements();
     const toast = useToast();
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -77,6 +79,7 @@ const AddNewOrder = () => {
             isClosable: true,
             status: "success",
         });
+        navigate("/sales/orders");
     };
 
     const handleSubmit = async (e) => {
@@ -99,10 +102,8 @@ const AddNewOrder = () => {
             payment: {
                 ...formData.payment,
                 transactionId: paymentMethod.id,
-            },
-            onSuccess
-        }));
-        console.log("Order created successfully");
+            }
+        }, onSuccess));
     };
 
     return (
@@ -120,7 +121,7 @@ const AddNewOrder = () => {
                         <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                             <GridItem>
                                 <FormControl>
-                                    <FormLabel>Customer</FormLabel>
+                                    <FormLabel>Customer id</FormLabel>
                                     <Input
                                         type="text"
                                         name="customer"
@@ -131,7 +132,7 @@ const AddNewOrder = () => {
                             </GridItem>
                             <GridItem>
                                 <FormControl>
-                                    <FormLabel>Company</FormLabel>
+                                    <FormLabel>Company id</FormLabel>
                                     <Input
                                         type="text"
                                         name="company"
@@ -155,7 +156,7 @@ const AddNewOrder = () => {
                                             />
                                             <Input
                                                 type="text"
-                                                placeholder="Price"
+                                                placeholder="Product ID"
                                                 name="price"
                                                 value={item.price}
                                                 onChange={(e) => handleItemChange(index, e)}

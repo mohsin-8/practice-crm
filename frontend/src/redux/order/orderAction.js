@@ -42,7 +42,7 @@ export const OrderCreateAction = (formData, onSuccess) => {
                         type: actionTypes.CREATE_ORDER_SUCCESS,
                         payload: res.data
                     });
-                    if (onSuccess) onSuccess();
+                    onSuccess();
                 } else {
                     dispatch({
                         type: actionTypes.CREATE_ORDER_FAILED,
