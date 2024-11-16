@@ -32,14 +32,17 @@ const Sidebar = () => {
                 <Box overflowY="auto" h="calc(100vh - 80px)" p="20px 25px 60px">
                     <Box mb="20px">
                         <Box mb="15px">
-                            <Text fontSize="14px" fontWeight={500} color="#445164">Pages</Text>
+                            <Text fontSize="14px" fontWeight={500} color="#445164">Sales</Text>
                         </Box>
                         <UnorderedList listStyleType="none">
                             <ListItem marginBottom="15px">
                                 <Link to="/leads" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><SiGoogleads size={20} /> Leads</Link>
                             </ListItem>
                             <ListItem marginBottom="15px">
-                                <Link to="/sales/orders" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><FaTrophy size={20} /> Order List</Link>
+                                <Link to="/sales/orders" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><FaTrophy size={20} /> Orders</Link>
+                            </ListItem>
+                            <ListItem marginBottom="15px">
+                                <Link to="/sales/invoices" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><FaTrophy size={20} /> Invoices</Link>
                             </ListItem>
                         </UnorderedList>
                     </Box>

@@ -15,6 +15,8 @@ import Leads from './pages/leads/leads';
 import AddNewLead from './pages/leads/AddNewLead';
 import OrdersList from './pages/orders/OrdersList';
 import AddNewOrder from './pages/orders/AddNewOrder';
+import InvoicesList from './pages/invoices/InvoicesList';
+import AddNewInvoice from './pages/invoices/AddNewInvoice';
 
 const App = () => {
   return (
@@ -32,6 +34,8 @@ const App = () => {
         <Route path="/lead/add-new" element={<AddNewLead />} />
         <Route path="/sales/orders" element={<OrdersList />} />
         <Route path="/sales/order/add-new" element={<AddNewOrder />} />
+        <Route path="/sales/invoices" element={<InvoicesList />} />
+        <Route path="/invoice/add-new" element={<AddNewInvoice />} />
 
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/hr/users" element={<Users />} />

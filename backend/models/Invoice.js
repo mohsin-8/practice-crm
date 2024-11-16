@@ -1,61 +1,44 @@
 const mongoose = require("mongoose");
 
 const InvoiceSchema = new mongoose.Schema({
-    invoiceNumber: {
-        type: String,
+    credit: { type: Number, required: true },
+    subtotal: { type: Number, required: true },
+    discount: { type: Number, required: true },
+    total: { type: Number, required: true },
+    toBePaid: { type: Number, required: true },
+    balance: { type: Number, required: true },
+    merchant: { type: String, required: true },
+    currency: { type: String, required: true },
+    dueDate: { type: String, required: true },
+    companyName: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Leads',
         required: true,
-        unique: true,
     },
-    order: {
+    customerName: {
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    userName: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    orderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order',
         required: true,
     },
-    billingDate: {
-        type: Date,
-        default: Date.now,
-    },
-    dueDate: {
-        type: Date,
-        required: true,
-    },
-    items: [
-        {
-            description: {
-                type: String,
-                required: true,
-            },
-            quantity: {
-                type: Number,
-                required: true,
-                min: 1,
-            },
-            price: {
-                type: Number,
-                required: true,
-                min: 0,
-            },
-            total: {
-                type: Number,
-                required: true,
-                min: 0,
-            },
-        },
-    ],
-    totalAmount: {
-        type: Number,
-        required: true,
-        min: 0,
-    },
-    paymentStatus: {
+    status: {
         type: String,
-        enum: ['Unpaid', 'Partial', 'Paid', 'Overdue'],
-        default: 'Unpaid',
+        enum: ['Pending', 'Processing', 'Delivered', 'Cancelled'],
+        default: 'Pending',
     },
-    notes: {
-        type: String,
-    },
-}, { timestamps: true });
+});
 
-const invoiceModel = mongoose.model("Invoice", InvoiceSchema);
-module.exports = invoiceModel;
+const invoice = mongoose.model("Invoice", InvoiceSchema);
+module.exports = invoice;
