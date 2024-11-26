@@ -10,9 +10,11 @@ import {
     Input,
     Select,
     Text,
-    useToast,
+    useToast
 } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet-async';
+import { CreateInvoiceAction } from "../../redux/invoice/invoiceAction";
+import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 
 const AddNewInvoice = () => {
@@ -28,18 +30,33 @@ const AddNewInvoice = () => {
         dueDate: "",
         companyName: "",
         customerName: "",
-        userName: "",
         orderId: "",
         status: "Pending",
     });
+
+    const dispatch = useDispatch();
+    const toast = useToast();
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
+    const onSuccess = () => {
+        toast({
+            title: "Add new invoice Successfully",
+            position: "top-right",
+            isClosable: true,
+            status: "success",
+            duration: 2000
+        });
+        navigate("/sales/invoices");
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        dispatch(CreateInvoiceAction(formData, onSuccess));
         console.log(formData, "formData");
     };
 
@@ -103,12 +120,12 @@ const AddNewInvoice = () => {
                                     <Input type="text" name='customerName' onChange={handleChange} value={formData.customerName} />
                                 </FormControl>
                             </GridItem>
-                            <GridItem>
+                            {/* <GridItem>
                                 <FormControl>
                                     <FormLabel>User Name</FormLabel>
                                     <Input type="text" name='userName' onChange={handleChange} value={formData.userName} />
                                 </FormControl>
-                            </GridItem>
+                            </GridItem> */}
                             <GridItem>
                                 <FormControl>
                                     <FormLabel>Order Id</FormLabel>

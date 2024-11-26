@@ -24,9 +24,8 @@ const InvoiceSchema = new mongoose.Schema({
         default: Date.now
     },
     userName: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+        type: String,
+        required: false,
     },
     orderId: {
         type: mongoose.Schema.Types.ObjectId,

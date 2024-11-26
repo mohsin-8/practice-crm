@@ -1,7 +1,15 @@
 const InvoiceModel = require("../models/Invoice");
+const jwt = require("jsonwebtoken");
 
 exports.CreateInvoice = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: "No token provided" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
         const { credit, subtotal, discount, total, toBePaid, balance, merchant, currency, dueDate, companyName, customerName, createdAt, userName, orderId, status } = req.body;
 
         const invoice = new InvoiceModel({
@@ -17,7 +25,7 @@ exports.CreateInvoice = async (req, res) => {
             companyName,
             customerName,
             createdAt,
-            userName,
+            userName: decoded.userName,
             orderId,
             status
         });

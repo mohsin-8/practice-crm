@@ -6,7 +6,12 @@ export const CreateInvoiceAction = (formData, onSuccess) => {
         dispatch({
             type: actionTypes.CREATE_INVOICE_LOADING
         });
-        axiosInstance.post("/invoice/create", formData)
+        const accessToken = localStorage.getItem("accessToken");
+        axiosInstance.post("/invoice/create", formData, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
             .then((res) => {
                 if (res.status === 200) {
                     dispatch({
