@@ -11,12 +11,7 @@ import Users from './pages/Users/Users';
 import AddNewUser from './pages/Users/AddNewUser';
 import ProfileSettings from './pages/profile-settings/ProfileSettings';
 import Projects from './pages/projects/Projects';
-import Leads from './pages/leads/leads';
-import AddNewLead from './pages/leads/AddNewLead';
-import OrdersList from './pages/orders/OrdersList';
-import AddNewOrder from './pages/orders/AddNewOrder';
-import InvoicesList from './pages/invoices/InvoicesList';
-import AddNewInvoice from './pages/invoices/AddNewInvoice';
+import Leads from "./pages/leads/Leads";
 
 const App = () => {
   return (
@@ -30,12 +25,7 @@ const App = () => {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/profile-settings" element={<ProfileSettings />} />
         <Route path="/projects" element={<Projects />} />
-        <Route path="/leads" element={<Leads />} />
-        <Route path="/lead/add-new" element={<AddNewLead />} />
-        <Route path="/sales/orders" element={<OrdersList />} />
-        <Route path="/sales/order/add-new" element={<AddNewOrder />} />
-        <Route path="/sales/invoices" element={<InvoicesList />} />
-        <Route path="/invoice/add-new" element={<AddNewInvoice />} />
+        <Route path="/sales/leads" element={<Leads />} />
 
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/hr/users" element={<Users />} />

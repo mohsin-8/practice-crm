@@ -36,13 +36,13 @@ const Sidebar = () => {
                         </Box>
                         <UnorderedList listStyleType="none">
                             <ListItem marginBottom="15px">
-                                <Link to="/leads" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><SiGoogleads size={20} /> Leads</Link>
+                                <Link to="/sales/leads" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><SiGoogleads size={20} /> Leads</Link>
                             </ListItem>
                             <ListItem marginBottom="15px">
-                                <Link to="/sales/orders" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><FaTrophy size={20} /> Orders</Link>
+                                <Link to="#" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><FaTrophy size={20} /> Orders</Link>
                             </ListItem>
                             <ListItem marginBottom="15px">
-                                <Link to="/sales/invoices" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><FaTrophy size={20} /> Invoices</Link>
+                                <Link to="#" style={{ color: "#000000", display: "flex", alignItems: "center", gap: "6px" }}><FaTrophy size={20} /> Invoices</Link>
                             </ListItem>
                         </UnorderedList>
                     </Box>

@@ -6,10 +6,8 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const projectsRoutes = require("./routes/projectRoutes");
 const tagsRoutes = require("./routes/tagsRoutes");
-const leadRoutes = require("./routes/leadsRoutes");
 const productRoutes = require("./routes/productRoutes");
-const orderRoutes = require("./routes/orderRoutes");
-const invoiceRoutes = require("./routes/invoiceRoutes");
+const leadsRoutes = require("./routes/leadsRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -22,9 +20,7 @@ app.use("/auth", authRoutes);
 app.use("/", userRoutes);
 app.use("/project", projectsRoutes);
 app.use("/", tagsRoutes);
-app.use("/leads", leadRoutes);
 app.use("/", productRoutes);
-app.use("/", orderRoutes);
-app.use("/", invoiceRoutes);
+app.use("/", leadsRoutes);
 
 app.listen(PORT, () => console.log(`server is running on port: ${PORT}`));

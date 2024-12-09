@@ -14,51 +14,16 @@ exports.CreateLeads = async (req, res) => {
         });
 
         await leads.save();
-        res.status(200).json({ message: "Lead Created Successfully", leads });
+        res.status(200).json({ message: "Leads created successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
 exports.GetAllLeads = async (req, res) => {
     try {
-        const leads = await LeadsModel.find({});
-
-        res.status(200).json(leads);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-exports.UpdateLeads = async (req, res) => {
-    try {
-        const { customer, email, phone, company, lead_source, status } = req.body;
-        const { id } = req.params;
-
-        if (!customer || !email || !phone || !company || !lead_source || !status) {
-            return res.status(400).json({ message: "send all required fields" });
-        }
-
-        const updateLeadsData = await LeadsModel.findByIdAndUpdate(id, req.body);
-        if (!updateLeadsData) {
-            return res.status(404).json({ message: "lead not found!" });
-        }
-
-        return res.status(200).json({ message: "user data updated successfully" });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-exports.DeleteLead = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const leadExists = await LeadsModel.findByIdAndDelete(id);
-        if (!leadExists) {
-            return res.status(404).json({ message: "lead not found" });
-        }
-
-        return res.status(200).json({ message: "lead deleted successfully" });
+        const leadsData = await LeadsModel.find({});
+        res.status(200).json(leadsData);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
