@@ -85,7 +85,6 @@ const Projects = () => {
                         </InputGroup>
                     </Flex>
                     <Box p={4}>
-                        {/* {isLoadingProject && <Spinner color="red.500" size="xl" />} */}
                         <TableContainer border="1px solid #d5d9e2" borderRadius="15px" bgColor="white">
                             {isLoadingProject ? (
                                 <Spinner size="xl" />

@@ -2,7 +2,9 @@ import * as actionTypes from "./leadsType";
 
 const initialState = {
     isLoadingAllLeads: false,
-    isAllLeads: null
+    isAllLeads: null,
+    isLeadDeleteByIdLoading: false,
+    isLoadingUpdateLead: false
 };
 
 export const leadsReducer = (state = initialState, action) => {
@@ -25,6 +27,42 @@ export const leadsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoadingAllLeads: false
+            };
+
+        case actionTypes.DELETE_LEADS_BY_ID_LOADING:
+            return {
+                ...state,
+                isLeadDeleteByIdLoading: true
+            };
+
+        case actionTypes.DELETE_LEADS_BY_ID_SUCCESS:
+            return {
+                ...state,
+                isAllLeads: state.isAllLeads.filter(lead => lead?._id !== payload),
+                isLeadDeleteByIdLoading: false
+            };
+
+        case actionTypes.DELETE_LEADS_BY_ID_ERROR:
+            return {
+                ...state,
+                isLeadDeleteByIdLoading: false
+            };
+
+        case actionTypes.UPDATE_LEADS_BY_ID_LOADING:
+            return {
+                ...state,
+                isLoadingUpdateLead: true,
+            };
+        case actionTypes.UPDATE_LEADS_BY_ID_SUCCESS:
+            return {
+                ...state,
+                isAllLeads: state.isAllLeads.map(lead => lead?._id === payload?._id ? { ...lead, ...payload } : lead),
+                isLoadingUpdateLead: false,
+            };
+        case actionTypes.UPDATE_LEADS_BY_ID_ERROR:
+            return {
+                ...state,
+                isLoadingUpdateLead: false,
             };
         default:
             return state;

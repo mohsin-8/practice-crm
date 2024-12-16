@@ -7,6 +7,7 @@ import { FaEye } from 'react-icons/fa';
 import { useSelector, useDispatch } from "react-redux";
 import { GetLeadsAction } from '../../redux/leads/leadsAction';
 import EditLeadsModal from '../../components/EditLeadsModal/EditLeadsModal';
+import DeleteLeadsModal from '../../components/DeleteLeadsModal/DeleteLeadsModal';
 
 const Leads = () => {
     const [selectedLeadId, setSelectedLeadId] = useState(null);
@@ -14,7 +15,6 @@ const Leads = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isAllLeads, isLoadingAllLeads } = useSelector((state) => state.leads);
-
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -63,65 +63,67 @@ const Leads = () => {
                     </Flex>
                     <Box p={4}>
                         <TableContainer border="1px solid #d5d9e2" borderRadius="15px" bgColor="white">
-                            {
-                                isLoadingAllLeads ? (<Spinner size="xl" />) : (
-                                    <Table variant="simple">
-                                        <Thead bg="gray.100">
+                            {isLoadingAllLeads ? (
+                                <Spinner size="xl" />
+                            ) : (
+                                <Table variant="simple">
+                                    <Thead bg="gray.100">
+                                        <Tr>
+                                            <Th fontSize={"14px"} fontWeight={600}>ID</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Customer</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Email</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Company</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Status</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Lead Source</Th>
+                                            <Th fontSize={"14px"} fontWeight={600}>Action</Th>
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        {isAllLeads?.length > 0 ? (
+                                            isAllLeads?.map(data => {
+                                                return (
+                                                    <Tr key={data?._id}>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?._id}</Td>
+                                                        <Td>
+                                                            <Flex alignItems="center">
+                                                                <Text fontSize={"14px"} fontWeight={400}>{data?.customer}</Text>
+                                                            </Flex>
+                                                        </Td>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?.email}</Td>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?.phone}</Td>
+
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?.company}</Td>
+                                                        <Td>
+                                                            <Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} bgColor={data?.status === "confirmed" ? "lightgreen" : "transparent" && data?.status === "in progress" ? "#FAA0A0" : "transparent" && data?.status === "pending" ? "#FFFF00" : "transparent" && data?.status === "rejected" ? "#D2042D" : "transparent"} textTransform="capitalize" color={data?.status === "rejected" ? "#ffffff" : "#000"} fontSize={"14px"} fontWeight={400}>{data?.status}</Text>
+                                                        </Td>
+                                                        <Td fontSize={"14px"} fontWeight={400}>{data?.lead_source}</Td>
+
+                                                        <Td>
+                                                            <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" />
+                                                            <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" onClick={() => handleOpenEditModal(data?._id)} />
+                                                            <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" onClick={() => { setSelectedLeadId(data?._id); onOpen(); }} />
+                                                        </Td>
+                                                    </Tr>
+                                                )
+                                            })
+                                        ) : (
                                             <Tr>
-                                                <Th fontSize={"14px"} fontWeight={600}>ID</Th>
-                                                <Th fontSize={"14px"} fontWeight={600}>Customer</Th>
-                                                <Th fontSize={"14px"} fontWeight={600}>Email</Th>
-                                                <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
-                                                <Th fontSize={"14px"} fontWeight={600}>Company</Th>
-                                                <Th fontSize={"14px"} fontWeight={600}>Status</Th>
-                                                <Th fontSize={"14px"} fontWeight={600}>Lead Source</Th>
-                                                <Th fontSize={"14px"} fontWeight={600}>Action</Th>
+                                                <Td colSpan={9} textAlign="center">
+                                                    <Text fontSize="22px" fontWeight={700} color={"#000000"}>No Lead Found!</Text>
+                                                </Td>
                                             </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            {isAllLeads?.length > 0 ? (
-                                                isAllLeads?.map(data => {
-                                                    return (
-                                                        <Tr key={data?._id}>
-                                                            <Td fontSize={"14px"} fontWeight={400}>{data?._id}</Td>
-                                                            <Td>
-                                                                <Flex alignItems="center">
-                                                                    <Text fontSize={"14px"} fontWeight={400}>{data?.customer}</Text>
-                                                                </Flex>
-                                                            </Td>
-                                                            <Td fontSize={"14px"} fontWeight={400}>{data?.email}</Td>
-                                                            <Td fontSize={"14px"} fontWeight={400}>{data?.phone}</Td>
-
-                                                            <Td fontSize={"14px"} fontWeight={400}>{data?.company}</Td>
-                                                            <Td>
-                                                                <Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} bgColor={data?.status === "confirmed" ? "lightgreen" : "transparent" && data?.status === "in progress" ? "#FAA0A0" : "transparent" && data?.status === "pending" ? "#FFFF00" : "transparent" && data?.status === "rejected" ? "#D2042D" : "transparent"} textTransform="capitalize" color={data?.status === "rejected" ? "#ffffff" : "#000"} fontSize={"14px"} fontWeight={400}>{data?.status}</Text>
-                                                            </Td>
-                                                            <Td fontSize={"14px"} fontWeight={400}>{data?.lead_source}</Td>
-
-                                                            <Td>
-                                                                <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" />
-                                                                <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" onClick={() => handleOpenEditModal(data?._id)} />
-                                                                <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" />
-                                                            </Td>
-                                                        </Tr>
-                                                    )
-                                                })
-                                            ) : (
-                                                <Tr>
-                                                    <Td colSpan={9} textAlign="center">
-                                                        <Text fontSize="22px" fontWeight={700} color={"#000000"}>No Project Found!</Text>
-                                                    </Td>
-                                                </Tr>
-                                            )}
-                                        </Tbody>
-                                    </Table>
-                                )
+                                        )}
+                                    </Tbody>
+                                </Table>
+                            )
                             }
                         </TableContainer>
                         <EditLeadsModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} leadId={selectedLeadId} refreshUpdateTableData={refreshUpdateTableData} />
+                        <DeleteLeadsModal isOpen={isOpen} onClose={onClose} leadId={selectedLeadId} />
 
                         <Flex justify="space-between" mt={4} alignItems="center">
-                            <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 5 of 100 results</Text>
+                            <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 1 of {isAllLeads?.length} results</Text>
                             <Flex>
                                 <Button mr={2}>Previous</Button>
                                 <Button>Next</Button>
