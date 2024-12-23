@@ -1,6 +1,34 @@
 import * as actionTypes from "./leadsType";
 import axiosInstance from "../../axiosInstance";
 
+export const CreateLeadAction = (formData, onSuccess) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.CREATE_LEADS_LOADING
+        });
+        axiosInstance.post("/lead/create", formData)
+            .then((res) => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.CREATE_LEADS_SUCCESS,
+                        payload: res.data
+                    });
+                    onSuccess();
+                } else {
+                    dispatch({
+                        type: actionTypes.CREATE_LEADS_FAILED,
+                        payload: res.data.message
+                    });
+                }
+            }).catch((error) => {
+                dispatch({
+                    type: actionTypes.CREATE_LEADS_FAILED,
+                    payload: error.response?.data?.message || "Failed to create new Lead."
+                });
+            });
+    }
+};
+
 export const GetLeadsAction = () => {
     return (dispatch) => {
         dispatch({
@@ -63,25 +91,25 @@ export const UpdateLeadByIdAction = (leadId, onSuccess, formData) => {
             type: actionTypes.UPDATE_LEADS_BY_ID_LOADING
         });
         axiosInstance.put(`/lead/update/${leadId}`, formData)
-        .then((res)=> {
-            if(res.status === 200) {
-                dispatch({
-                    type: actionTypes.UPDATE_LEADS_BY_ID_SUCCESS,
-                    payload: res.data
-                });
-                onSuccess();
-            } else {
+            .then((res) => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.UPDATE_LEADS_BY_ID_SUCCESS,
+                        payload: res.data
+                    });
+                    onSuccess();
+                } else {
+                    dispatch({
+                        type: actionTypes.UPDATE_LEADS_BY_ID_ERROR,
+                        payload: res.data.message
+                    });
+                }
+            })
+            .catch((error) => {
                 dispatch({
                     type: actionTypes.UPDATE_LEADS_BY_ID_ERROR,
-                    payload: res.data.message
+                    payload: error.response?.data?.message || "Failed to update lead data."
                 });
-            }
-        })
-        .catch((error) => {
-            dispatch({
-                type: actionTypes.UPDATE_LEADS_BY_ID_ERROR,
-                payload: error.response?.data?.message || "Failed to update lead data."
             });
-        });
     }
 };

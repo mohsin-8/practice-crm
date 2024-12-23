@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { GetLeadsAction } from '../../redux/leads/leadsAction';
 import EditLeadsModal from '../../components/EditLeadsModal/EditLeadsModal';
 import DeleteLeadsModal from '../../components/DeleteLeadsModal/DeleteLeadsModal';
+import { Link } from 'react-router-dom';
 
 const Leads = () => {
     const [selectedLeadId, setSelectedLeadId] = useState(null);
@@ -60,6 +61,16 @@ const Leads = () => {
                                 <IoSearch color="#605dff" size={20} />
                             </InputRightElement>
                         </InputGroup>
+
+                        <Link to="/sales/lead/create"
+                            style={{
+                                border: "1px solid rgb(96, 93, 255)",
+                                fontSize: "16px",
+                                fontWeight: "400",
+                                color: "rgb(96, 93, 255)",
+                                borderRadius: "100px",
+                                padding: "0.5rem 1.5rem"
+                            }}>+ Create Lead</Link>
                     </Flex>
                     <Box p={4}>
                         <TableContainer border="1px solid #d5d9e2" borderRadius="15px" bgColor="white">
@@ -74,7 +85,6 @@ const Leads = () => {
                                             <Th fontSize={"14px"} fontWeight={600}>Email</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Company</Th>
-                                            <Th fontSize={"14px"} fontWeight={600}>Status</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Lead Source</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Action</Th>
                                         </Tr>
@@ -94,9 +104,6 @@ const Leads = () => {
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.phone}</Td>
 
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.company}</Td>
-                                                        <Td>
-                                                            <Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} bgColor={data?.status === "confirmed" ? "lightgreen" : "transparent" && data?.status === "in progress" ? "#FAA0A0" : "transparent" && data?.status === "pending" ? "#FFFF00" : "transparent" && data?.status === "rejected" ? "#D2042D" : "transparent"} textTransform="capitalize" color={data?.status === "rejected" ? "#ffffff" : "#000"} fontSize={"14px"} fontWeight={400}>{data?.status}</Text>
-                                                        </Td>
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.lead_source}</Td>
 
                                                         <Td>

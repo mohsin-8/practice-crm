@@ -20,27 +20,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { UpdateLeadByIdAction } from '../../redux/leads/leadsAction';
 
 const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => {
-    const [formData, setFormData] = useState({ customer: "", email: "", phone: null, company: "", lead_source: "", status: "" });
+    const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", lead_source: "" });
 
     const { isAllLeads } = useSelector((state) => state.leads);
-
     const toast = useToast();
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (isOpen && leadId) {
-            const lead = isAllLeads.find(i => i?._id === leadId);
+            const lead = isAllLeads?.find(i => i?._id === leadId);
             if (lead) {
                 setFormData({
                     customer: lead.customer || "",
                     email: lead.email || "",
-                    phone: lead.phone || null,
+                    phone: lead.phone ? lead.phone.toString() : "",
                     company: lead.company || "",
-                    lead_source: lead.lead_source || "",
-                    status: lead.status || ""
+                    lead_source: lead.lead_source || ""
                 })
             } else {
-                setFormData({ customer: "", email: "", phone: null, company: "", lead_source: "", status: "" });
+                setFormData({ customer: "", email: "", phone: null, company: "", lead_source: "" });
             }
         }
     }, [isOpen, leadId, isAllLeads]);
@@ -65,18 +63,16 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
 
     const handleEditLead = (e) => {
         e.preventDefault();
-        if (!formData.name || !formData.email || !formData.role) {
-            toast({
-                title: "All fields are required",
-                status: "error",
-                position: "top-right",
-                isClosable: true,
-            });
-            return;
-        }
-        dispatch(UpdateLeadByIdAction(leadId, formData, onSuccess));
+
+        const formattedData = {
+            ...formData,
+            phone: formData.phone !== "" ? Number(formData.phone) : null,
+        };
+
+        dispatch(UpdateLeadByIdAction(leadId, onSuccess, formattedData));
         onClose();
     };
+
     const leadName = isAllLeads?.find(i => i?._id === leadId);
 
     return (
@@ -141,18 +137,12 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
                                     <FormLabel>Lead Source</FormLabel>
                                     <Select name='lead_source' onChange={handleChange} value={formData.lead_source}>
                                         <option value="Website">Website</option>
-                                        <option value="Organic">Organic</option>
-                                    </Select>
-                                </FormControl>
-                            </GridItem>
-                            <GridItem>
-                                <FormControl>
-                                    <FormLabel>Status</FormLabel>
-                                    <Select name='status' onChange={handleChange} value={formData.status}>
-                                        <option value="confirmed">Confirmed</option>
-                                        <option value="in progress">Organic</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="rejected">Rejected</option>
+                                        <option value="Bark">Bark</option>
+                                        <option value="Google">Google</option>
+                                        <option value="Bing">Bing</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Thumbtack">Thumbtack</option>
+                                        <option value="Other">Other</option>
                                     </Select>
                                 </FormControl>
                             </GridItem>

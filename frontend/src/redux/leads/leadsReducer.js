@@ -4,7 +4,9 @@ const initialState = {
     isLoadingAllLeads: false,
     isAllLeads: null,
     isLeadDeleteByIdLoading: false,
-    isLoadingUpdateLead: false
+    isLoadingUpdateLead: false,
+    isLoadingCreateNewLead: false,
+    isCreateNewLead: null
 };
 
 export const leadsReducer = (state = initialState, action) => {
@@ -64,6 +66,23 @@ export const leadsReducer = (state = initialState, action) => {
                 ...state,
                 isLoadingUpdateLead: false,
             };
+
+        case actionTypes.CREATE_LEADS_LOADING:
+            return {
+                ...state,
+                isLoadingCreateNewLead: true
+            };
+        case actionTypes.CREATE_LEADS_SUCCESS:
+            return {
+                ...state,
+                isCreateNewLead: payload,
+                isLoadingCreateNewLead: false,
+            };
+        case actionTypes.CREATE_LEADS_FAILED:
+            return {
+                ...state,
+                isLoadingCreateNewLead: false,
+            }
         default:
             return state;
     }

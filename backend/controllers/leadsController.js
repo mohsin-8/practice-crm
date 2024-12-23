@@ -2,15 +2,14 @@ const LeadsModel = require("../models/Leads");
 
 exports.CreateLeads = async (req, res) => {
     try {
-        const { customer, email, phone, company, lead_source, status } = req.body;
+        const { customer, email, phone, company, lead_source } = req.body;
 
         const leads = new LeadsModel({
             customer,
             email,
             phone,
             company,
-            lead_source,
-            status
+            lead_source
         });
 
         await leads.save();
@@ -23,9 +22,9 @@ exports.CreateLeads = async (req, res) => {
 exports.UpdateLeadByItsId = async (req, res) => {
     try {
         const { id } = req.params;
-        const { customer, email, phone, company, lead_source, status } = req.body;
+        const { customer, email, phone, company, lead_source } = req.body;
 
-        if (!customer || !email || !phone || !company || !lead_source || !status) {
+        if (!customer || !email || !phone || !company || !lead_source) {
             return res.status(400).send({ message: "send all required fields" });
         }
 
