@@ -6,6 +6,7 @@ const LeadsSchema = new mongoose.Schema({
     phone: { type: Number, required: true },
     company: { type: String, required: true },
     lead_source: { type: String, enum: ["Website", "Bark", "Google", "Bing", "Facebook", "Thumbtack", "Other"], required: true },
+    country: { type: String, required: true },
     createdAt: {
         type: Date,
         default: Date.now

@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { UpdateLeadByIdAction } from '../../redux/leads/leadsAction';
 
 const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => {
-    const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", lead_source: "" });
+    const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", lead_source: "", country: "" });
 
     const { isAllLeads } = useSelector((state) => state.leads);
     const toast = useToast();
@@ -35,10 +35,11 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
                     email: lead.email || "",
                     phone: lead.phone ? lead.phone.toString() : "",
                     company: lead.company || "",
-                    lead_source: lead.lead_source || ""
+                    lead_source: lead.lead_source || "",
+                    country: lead.country || ""
                 })
             } else {
-                setFormData({ customer: "", email: "", phone: null, company: "", lead_source: "" });
+                setFormData({ customer: "", email: "", phone: null, company: "", lead_source: "", country: "" });
             }
         }
     }, [isOpen, leadId, isAllLeads]);
@@ -144,6 +145,17 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
                                         <option value="Thumbtack">Thumbtack</option>
                                         <option value="Other">Other</option>
                                     </Select>
+                                </FormControl>
+                            </GridItem>
+                            <GridItem>
+                                <FormControl>
+                                    <FormLabel>Country</FormLabel>
+                                    <Input
+                                        type='text'
+                                        name='country'
+                                        value={formData.country}
+                                        disabled={true}
+                                    />
                                 </FormControl>
                             </GridItem>
                             <GridItem colSpan={2}>

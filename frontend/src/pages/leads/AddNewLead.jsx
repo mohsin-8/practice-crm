@@ -4,9 +4,11 @@ import { Box, Button, FormControl, FormLabel, Grid, GridItem, Input, Select, Tex
 import { useDispatch } from 'react-redux';
 import { CreateLeadAction } from '../../redux/leads/leadsAction';
 import { useNavigate } from 'react-router-dom';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const AddNewLead = () => {
-    const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", lead_source: "" });
+    const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", lead_source: "", country: "" });
 
     const dispatch = useDispatch();
     const toast = useToast();
@@ -17,6 +19,14 @@ const AddNewLead = () => {
         setFormData(prevState => ({
             ...prevState,
             [name]: value
+        }));
+    };
+
+    const handlePhoneChange = (value, countryData) => {
+        setFormData(prevState => ({
+            ...prevState,
+            phone: value,
+            country: countryData.name, // Country name from the library
         }));
     };
 
@@ -72,19 +82,18 @@ const AddNewLead = () => {
                                     placeholder='Email'
                                 />
                             </FormControl>
-
                         </GridItem>
                         <GridItem>
                             <FormControl>
                                 <FormLabel>Phone*</FormLabel>
-                                <Input
-                                    type='number'
-                                    w={"100%"}
-                                    h={"50px"}
-                                    name='phone'
+                                <PhoneInput
+                                    country={'us'}
                                     value={formData.phone}
-                                    onChange={handleChange}
-                                    placeholder='Phone*'
+                                    onChange={handlePhoneChange}
+                                    inputStyle={{
+                                        width: "100%",
+                                        height: "50px",
+                                    }}
                                 />
                             </FormControl>
                         </GridItem>
@@ -116,6 +125,21 @@ const AddNewLead = () => {
                                 </Select>
                             </FormControl>
                         </GridItem>
+                        <GridItem>
+                            <FormControl>
+                                <FormLabel>Country</FormLabel>
+                                <Input
+                                    type='text'
+                                    w={"100%"}
+                                    h={"50px"}
+                                    name='country'
+                                    value={formData.country}
+                                    onChange={handleChange}
+                                    placeholder='Country'
+                                    disabled={true}
+                                />
+                            </FormControl>
+                        </GridItem>
                     </Grid>
                     <Box mt={"30px"}>
                         <Button
@@ -132,7 +156,7 @@ const AddNewLead = () => {
                 </form>
             </Box>
         </Layout>
-    )
-}
+    );
+};
 
 export default AddNewLead;
