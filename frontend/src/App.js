@@ -13,6 +13,7 @@ import ProfileSettings from './pages/profile-settings/ProfileSettings';
 import Projects from './pages/projects/Projects';
 import Leads from "./pages/leads/Leads";
 import AddNewLead from "./pages/leads/AddNewLead";
+import LeadDetails from './pages/leads/LeadDetails';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/projects" element={<Projects />} />
         <Route path="/sales/leads" element={<Leads />} />
         <Route path="/sales/lead/create" element={<AddNewLead />} />
+        <Route path="/sales/lead/details/:id" element={<LeadDetails />} />
 
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/hr/users" element={<Users />} />

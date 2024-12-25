@@ -8,15 +8,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { GetLeadsAction } from '../../redux/leads/leadsAction';
 import EditLeadsModal from '../../components/EditLeadsModal/EditLeadsModal';
 import DeleteLeadsModal from '../../components/DeleteLeadsModal/DeleteLeadsModal';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import ViewLeadsModal from '../../components/ViewLeadsModal/ViewLeadsModal';
 
 const Leads = () => {
     const [selectedLeadId, setSelectedLeadId] = useState(null);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [isViewModalOpen, setViewModalOpen] = useState(false);
+    const [isViewLeadModalData, setViewLeadModalData] = useState(null);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+
     const { isAllLeads, isLoadingAllLeads } = useSelector((state) => state.leads);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(GetLeadsAction());
@@ -34,6 +39,18 @@ const Leads = () => {
 
     const refreshUpdateTableData = () => {
         dispatch(GetLeadsAction());
+    };
+
+    const handleOpenViewLeadModal = (data) => {
+        navigate(`/sales/lead/details/${data?._id}`);
+        // setViewModalOpen(true);
+        // setViewLeadModalData(data);
+        // console.log(data);
+    };
+
+    const handleCloseViewLeadModal = () => {
+        setViewModalOpen(false);
+        setViewLeadModalData(null);
     };
 
     return (
@@ -107,7 +124,7 @@ const Leads = () => {
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.lead_source}</Td>
 
                                                         <Td>
-                                                            <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" />
+                                                            <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" onClick={() => handleOpenViewLeadModal(data)} />
                                                             <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" onClick={() => handleOpenEditModal(data?._id)} />
                                                             <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" onClick={() => { setSelectedLeadId(data?._id); onOpen(); }} />
                                                         </Td>
@@ -128,6 +145,7 @@ const Leads = () => {
                         </TableContainer>
                         <EditLeadsModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} leadId={selectedLeadId} refreshUpdateTableData={refreshUpdateTableData} />
                         <DeleteLeadsModal isOpen={isOpen} onClose={onClose} leadId={selectedLeadId} />
+                        {/* <ViewLeadsModal isOpen={isViewModalOpen} onClose={handleCloseViewLeadModal} isViewLeadModalData={isViewLeadModalData} /> */}
 
                         <Flex justify="space-between" mt={4} alignItems="center">
                             <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 1 of {isAllLeads?.length} results</Text>

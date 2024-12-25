@@ -15,9 +15,11 @@ import {
     Button,
     Flex,
     useToast,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { UpdateLeadByIdAction } from '../../redux/leads/leadsAction';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => {
     const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", lead_source: "", country: "" });
@@ -50,6 +52,14 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
             ...formData,
             [name]: value,
         });
+    };
+
+    const handlePhoneChange = (value, countryData) => {
+        setFormData(prevState => ({
+            ...prevState,
+            phone: value,
+            country: countryData.name, // Country name from the library
+        }));
     };
 
     const onSuccess = () => {
@@ -112,12 +122,21 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
                             <GridItem>
                                 <FormControl>
                                     <FormLabel>Phone</FormLabel>
-                                    <Input
+                                    {/* <Input
                                         type='number'
                                         name='phone'
                                         onChange={handleChange}
                                         value={formData.phone}
                                         placeholder="Enter Phone Number"
+                                    /> */}
+                                    <PhoneInput
+                                        country={'us'}
+                                        value={formData.phone}
+                                        onChange={handlePhoneChange}
+                                        inputStyle={{
+                                            width: "100%",
+                                            height: "50px",
+                                        }}
                                     />
                                 </FormControl>
                             </GridItem>
