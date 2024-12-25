@@ -142,8 +142,8 @@ exports.requestResetPassword = async (req, res) => {
         await user.save();
 
         // Create the reset URL
-        const resetUrl = `${process.env.LOCAL_FRONTEND_URL}/reset-password/${resetToken}`;
-        // const resetUrl = `${process.env.LIVE_FRONTEND_URL}/reset-password/${resetToken}`;
+        // const resetUrl = `${process.env.LOCAL_FRONTEND_URL}/reset-password/${resetToken}`;
+        const resetUrl = `${process.env.LIVE_FRONTEND_URL}/reset-password/${resetToken}`;
 
         // Send the reset email
         const mailOptions = {

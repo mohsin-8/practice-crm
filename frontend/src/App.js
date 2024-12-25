@@ -11,9 +11,9 @@ import Users from './pages/Users/Users';
 import AddNewUser from './pages/Users/AddNewUser';
 import ProfileSettings from './pages/profile-settings/ProfileSettings';
 import Projects from './pages/projects/Projects';
-import Leads from "./pages/leads/Leads";
 import AddNewLead from "./pages/leads/AddNewLead";
 import LeadDetails from './pages/leads/LeadDetails';
+import Leads from './pages/leads/Leads';
 
 const App = () => {
   return (

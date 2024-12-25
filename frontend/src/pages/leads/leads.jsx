@@ -9,13 +9,10 @@ import { GetLeadsAction } from '../../redux/leads/leadsAction';
 import EditLeadsModal from '../../components/EditLeadsModal/EditLeadsModal';
 import DeleteLeadsModal from '../../components/DeleteLeadsModal/DeleteLeadsModal';
 import { Link, useNavigate } from 'react-router-dom';
-import ViewLeadsModal from '../../components/ViewLeadsModal/ViewLeadsModal';
 
 const Leads = () => {
     const [selectedLeadId, setSelectedLeadId] = useState(null);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
-    const [isViewModalOpen, setViewModalOpen] = useState(false);
-    const [isViewLeadModalData, setViewLeadModalData] = useState(null);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -43,14 +40,6 @@ const Leads = () => {
 
     const handleOpenViewLeadModal = (data) => {
         navigate(`/sales/lead/details/${data?._id}`);
-        // setViewModalOpen(true);
-        // setViewLeadModalData(data);
-        // console.log(data);
-    };
-
-    const handleCloseViewLeadModal = () => {
-        setViewModalOpen(false);
-        setViewLeadModalData(null);
     };
 
     return (
@@ -145,7 +134,6 @@ const Leads = () => {
                         </TableContainer>
                         <EditLeadsModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} leadId={selectedLeadId} refreshUpdateTableData={refreshUpdateTableData} />
                         <DeleteLeadsModal isOpen={isOpen} onClose={onClose} leadId={selectedLeadId} />
-                        {/* <ViewLeadsModal isOpen={isViewModalOpen} onClose={handleCloseViewLeadModal} isViewLeadModalData={isViewLeadModalData} /> */}
 
                         <Flex justify="space-between" mt={4} alignItems="center">
                             <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 1 of {isAllLeads?.length} results</Text>
