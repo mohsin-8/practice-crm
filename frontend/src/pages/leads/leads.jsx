@@ -8,14 +8,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { GetLeadsAction } from '../../redux/leads/leadsAction';
 import EditLeadsModal from '../../components/EditLeadsModal/EditLeadsModal';
 import DeleteLeadsModal from '../../components/DeleteLeadsModal/DeleteLeadsModal';
+import { Link, useNavigate } from 'react-router-dom';
+import ViewLeadsModal from '../../components/ViewLeadsModal/ViewLeadsModal';
 
 const Leads = () => {
     const [selectedLeadId, setSelectedLeadId] = useState(null);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [isViewModalOpen, setViewModalOpen] = useState(false);
+    const [isViewLeadModalData, setViewLeadModalData] = useState(null);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+
     const { isAllLeads, isLoadingAllLeads } = useSelector((state) => state.leads);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(GetLeadsAction());
@@ -33,6 +39,18 @@ const Leads = () => {
 
     const refreshUpdateTableData = () => {
         dispatch(GetLeadsAction());
+    };
+
+    const handleOpenViewLeadModal = (data) => {
+        navigate(`/sales/lead/details/${data?._id}`);
+        // setViewModalOpen(true);
+        // setViewLeadModalData(data);
+        // console.log(data);
+    };
+
+    const handleCloseViewLeadModal = () => {
+        setViewModalOpen(false);
+        setViewLeadModalData(null);
     };
 
     return (
@@ -60,6 +78,16 @@ const Leads = () => {
                                 <IoSearch color="#605dff" size={20} />
                             </InputRightElement>
                         </InputGroup>
+
+                        <Link to="/sales/lead/create"
+                            style={{
+                                border: "1px solid rgb(96, 93, 255)",
+                                fontSize: "16px",
+                                fontWeight: "400",
+                                color: "rgb(96, 93, 255)",
+                                borderRadius: "100px",
+                                padding: "0.5rem 1.5rem"
+                            }}>+ Create Lead</Link>
                     </Flex>
                     <Box p={4}>
                         <TableContainer border="1px solid #d5d9e2" borderRadius="15px" bgColor="white">
@@ -74,7 +102,6 @@ const Leads = () => {
                                             <Th fontSize={"14px"} fontWeight={600}>Email</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Phone</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Company</Th>
-                                            <Th fontSize={"14px"} fontWeight={600}>Status</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Lead Source</Th>
                                             <Th fontSize={"14px"} fontWeight={600}>Action</Th>
                                         </Tr>
@@ -94,13 +121,10 @@ const Leads = () => {
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.phone}</Td>
 
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.company}</Td>
-                                                        <Td>
-                                                            <Text textAlign={"center"} py={"4px"} px={"4px"} borderRadius={"100px"} bgColor={data?.status === "confirmed" ? "lightgreen" : "transparent" && data?.status === "in progress" ? "#FAA0A0" : "transparent" && data?.status === "pending" ? "#FFFF00" : "transparent" && data?.status === "rejected" ? "#D2042D" : "transparent"} textTransform="capitalize" color={data?.status === "rejected" ? "#ffffff" : "#000"} fontSize={"14px"} fontWeight={400}>{data?.status}</Text>
-                                                        </Td>
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.lead_source}</Td>
 
                                                         <Td>
-                                                            <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" />
+                                                            <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" onClick={() => handleOpenViewLeadModal(data)} />
                                                             <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" onClick={() => handleOpenEditModal(data?._id)} />
                                                             <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" onClick={() => { setSelectedLeadId(data?._id); onOpen(); }} />
                                                         </Td>
@@ -121,6 +145,7 @@ const Leads = () => {
                         </TableContainer>
                         <EditLeadsModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} leadId={selectedLeadId} refreshUpdateTableData={refreshUpdateTableData} />
                         <DeleteLeadsModal isOpen={isOpen} onClose={onClose} leadId={selectedLeadId} />
+                        {/* <ViewLeadsModal isOpen={isViewModalOpen} onClose={handleCloseViewLeadModal} isViewLeadModalData={isViewLeadModalData} /> */}
 
                         <Flex justify="space-between" mt={4} alignItems="center">
                             <Text fontSize={"14px"} fontWeight={400}>Showing 1 to 1 of {isAllLeads?.length} results</Text>

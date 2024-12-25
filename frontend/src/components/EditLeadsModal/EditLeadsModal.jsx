@@ -15,32 +15,33 @@ import {
     Button,
     Flex,
     useToast,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { UpdateLeadByIdAction } from '../../redux/leads/leadsAction';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => {
-    const [formData, setFormData] = useState({ customer: "", email: "", phone: null, company: "", lead_source: "", status: "" });
+    const [formData, setFormData] = useState({ customer: "", email: "", phone: "", company: "", lead_source: "", country: "" });
 
     const { isAllLeads } = useSelector((state) => state.leads);
-
     const toast = useToast();
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (isOpen && leadId) {
-            const lead = isAllLeads.find(i => i?._id === leadId);
+            const lead = isAllLeads?.find(i => i?._id === leadId);
             if (lead) {
                 setFormData({
                     customer: lead.customer || "",
                     email: lead.email || "",
-                    phone: lead.phone || null,
+                    phone: lead.phone ? lead.phone.toString() : "",
                     company: lead.company || "",
                     lead_source: lead.lead_source || "",
-                    status: lead.status || ""
+                    country: lead.country || ""
                 })
             } else {
-                setFormData({ customer: "", email: "", phone: null, company: "", lead_source: "", status: "" });
+                setFormData({ customer: "", email: "", phone: null, company: "", lead_source: "", country: "" });
             }
         }
     }, [isOpen, leadId, isAllLeads]);
@@ -51,6 +52,14 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
             ...formData,
             [name]: value,
         });
+    };
+
+    const handlePhoneChange = (value, countryData) => {
+        setFormData(prevState => ({
+            ...prevState,
+            phone: value,
+            country: countryData.name, // Country name from the library
+        }));
     };
 
     const onSuccess = () => {
@@ -65,18 +74,16 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
 
     const handleEditLead = (e) => {
         e.preventDefault();
-        if (!formData.name || !formData.email || !formData.role) {
-            toast({
-                title: "All fields are required",
-                status: "error",
-                position: "top-right",
-                isClosable: true,
-            });
-            return;
-        }
-        dispatch(UpdateLeadByIdAction(leadId, formData, onSuccess));
+
+        const formattedData = {
+            ...formData,
+            phone: formData.phone !== "" ? Number(formData.phone) : null,
+        };
+
+        dispatch(UpdateLeadByIdAction(leadId, onSuccess, formattedData));
         onClose();
     };
+
     const leadName = isAllLeads?.find(i => i?._id === leadId);
 
     return (
@@ -115,12 +122,21 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
                             <GridItem>
                                 <FormControl>
                                     <FormLabel>Phone</FormLabel>
-                                    <Input
+                                    {/* <Input
                                         type='number'
                                         name='phone'
                                         onChange={handleChange}
                                         value={formData.phone}
                                         placeholder="Enter Phone Number"
+                                    /> */}
+                                    <PhoneInput
+                                        country={'us'}
+                                        value={formData.phone}
+                                        onChange={handlePhoneChange}
+                                        inputStyle={{
+                                            width: "100%",
+                                            height: "50px",
+                                        }}
                                     />
                                 </FormControl>
                             </GridItem>
@@ -141,19 +157,24 @@ const EditLeadsModal = ({ isOpen, onClose, leadId, refreshUpdateTableData }) => 
                                     <FormLabel>Lead Source</FormLabel>
                                     <Select name='lead_source' onChange={handleChange} value={formData.lead_source}>
                                         <option value="Website">Website</option>
-                                        <option value="Organic">Organic</option>
+                                        <option value="Bark">Bark</option>
+                                        <option value="Google">Google</option>
+                                        <option value="Bing">Bing</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Thumbtack">Thumbtack</option>
+                                        <option value="Other">Other</option>
                                     </Select>
                                 </FormControl>
                             </GridItem>
                             <GridItem>
                                 <FormControl>
-                                    <FormLabel>Status</FormLabel>
-                                    <Select name='status' onChange={handleChange} value={formData.status}>
-                                        <option value="confirmed">Confirmed</option>
-                                        <option value="in progress">Organic</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="rejected">Rejected</option>
-                                    </Select>
+                                    <FormLabel>Country</FormLabel>
+                                    <Input
+                                        type='text'
+                                        name='country'
+                                        value={formData.country}
+                                        disabled={true}
+                                    />
                                 </FormControl>
                             </GridItem>
                             <GridItem colSpan={2}>
