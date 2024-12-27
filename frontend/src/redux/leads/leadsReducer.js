@@ -6,7 +6,9 @@ const initialState = {
     isLeadDeleteByIdLoading: false,
     isLoadingUpdateLead: false,
     isLoadingCreateNewLead: false,
-    isCreateNewLead: null
+    isCreateNewLead: null,
+    isLoadingLeadDataById: false,
+    isGetLeadById: null
 };
 
 export const leadsReducer = (state = initialState, action) => {
@@ -82,6 +84,23 @@ export const leadsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoadingCreateNewLead: false,
+            }
+
+        case actionTypes.GET_LEADS_BY_ID_LOADING:
+            return {
+                ...state,
+                isLoadingLeadDataById: true
+            };
+        case actionTypes.GET_LEADS_BY_ID_SUCCESS:
+            return {
+                ...state,
+                isGetLeadById: payload,
+                isLoadingLeadDataById: false,
+            };
+        case actionTypes.GET_LEADS_BY_ID_FAILED:
+            return {
+                ...state,
+                isLoadingLeadDataById: false,
             }
         default:
             return state;

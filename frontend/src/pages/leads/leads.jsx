@@ -38,8 +38,8 @@ const Leads = () => {
         dispatch(GetLeadsAction());
     };
 
-    const handleOpenViewLeadModal = (data) => {
-        navigate(`/sales/lead/details/${data?._id}`);
+    const handleOpenViewLeadModal = (id) => {
+        navigate(`/sales/lead/details/${id}`);
     };
 
     return (
@@ -113,7 +113,7 @@ const Leads = () => {
                                                         <Td fontSize={"14px"} fontWeight={400}>{data?.lead_source}</Td>
 
                                                         <Td>
-                                                            <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" onClick={() => handleOpenViewLeadModal(data)} />
+                                                            <IconButton variant="ghost" icon={<FaEye />} aria-label="view" size="md" onClick={() => handleOpenViewLeadModal(data?._id)} />
                                                             <IconButton variant="ghost" icon={<IoPencilOutline />} aria-label="Edit" size="md" onClick={() => handleOpenEditModal(data?._id)} />
                                                             <IconButton variant="ghost" icon={<IoTrashOutline />} aria-label="Delete" color="red.500" size="md" onClick={() => { setSelectedLeadId(data?._id); onOpen(); }} />
                                                         </Td>
