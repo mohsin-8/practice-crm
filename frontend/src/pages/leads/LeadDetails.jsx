@@ -1,9 +1,10 @@
 import React from 'react';
-import { Box, Button, Flex, IconButton, Input, InputGroup, InputRightElement, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import { Helmet } from 'react-helmet-async';
 import { FaBinoculars, FaBriefcase, FaChartLine, FaDollarSign, FaEye, FaTrophy } from 'react-icons/fa';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import ClientImage from "../../assets/images/lead-detail-client.png";
 
 const LeadDetails = () => {
     return (
@@ -38,7 +39,14 @@ const LeadDetails = () => {
 
                         <TabPanels>
                             <TabPanel>
-                                <p>Manage your team members</p>
+                                <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+                                    <GridItem>
+                                        <img src={ClientImage} alt="" />
+                                    </GridItem>
+                                    <GridItem>
+                                        Test
+                                    </GridItem>
+                                </Grid>
                             </TabPanel>
                             <TabPanel>
                                 <p>Manage your Order</p>
