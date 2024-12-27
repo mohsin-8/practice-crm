@@ -42,7 +42,6 @@ const Leads = () => {
         navigate(`/sales/lead/details/${id}`);
     };
 
-
     return (
         <>
             <Helmet>
