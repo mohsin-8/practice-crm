@@ -20,6 +20,21 @@ exports.CreateLeads = async (req, res) => {
     }
 };
 
+exports.GetLeadsById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const leadData = await LeadsModel.findById(id);
+
+        if (!leadData) {
+            return res.status(404).json({ message: "Lead not found!" });
+        }
+
+        res.status(200).json(leadData);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.UpdateLeadByItsId = async (req, res) => {
     try {
         const { id } = req.params;

@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import { Helmet } from 'react-helmet-async';
-import { FaBinoculars, FaBriefcase, FaChartLine, FaDollarSign, FaEye, FaTrophy } from 'react-icons/fa';
+import { FaBinoculars, FaBriefcase, FaCalendarAlt, FaChartLine, FaDollarSign, FaEye, FaGlobe, FaPhoneAlt, FaTrophy } from 'react-icons/fa';
+import { CgWebsite } from "react-icons/cg";
+import { IoMdMail } from "react-icons/io";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import ClientImage from "../../assets/images/lead-detail-client.png";
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
+import { GetLeadsByIdAction } from "../../redux/leads/leadsAction";
+import moment from 'moment';
 
 const LeadDetails = () => {
+    const { id } = useParams();
+
+    const dispatch = useDispatch();
+
+    const { isGetLeadById } = useSelector((state) => state.leads);
+
+    useEffect(() => {
+        dispatch(GetLeadsByIdAction(id));
+    }, [dispatch, id]);
+
     return (
         <>
             <Helmet>
@@ -41,10 +57,32 @@ const LeadDetails = () => {
                             <TabPanel>
                                 <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                                     <GridItem>
-                                        <img src={ClientImage} alt="" />
+                                        <Flex gap={"20px"}>
+                                            <img src={ClientImage} alt="ClientImage" />
+                                            <Box>
+                                                <Text fontSize={"18px"} textTransform={"capitalize"} fontWeight={700}>{isGetLeadById?.customer}</Text>
+                                                <Text fontSize={"16px"} textTransform={"capitalize"} fontWeight={500}>Lead Id: {isGetLeadById?._id}</Text>
+                                            </Box>
+                                        </Flex>
                                     </GridItem>
                                     <GridItem>
-                                        Test
+                                        <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+                                            <GridItem>
+                                                <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><IoMdMail color={"rgb(96, 93, 255)"} size={20} /> {isGetLeadById?.email}</Text>
+                                            </GridItem>
+                                            <GridItem>
+                                                <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><FaPhoneAlt color={"rgb(96, 93, 255)"} size={20} /> {isGetLeadById?.phone}</Text>
+                                            </GridItem>
+                                            <GridItem>
+                                                <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><FaGlobe color={"rgb(96, 93, 255)"} size={20} /> {isGetLeadById?.lead_source}</Text>
+                                            </GridItem>
+                                            <GridItem>
+                                                <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><FaCalendarAlt color={"rgb(96, 93, 255)"} size={20} />{moment(isGetLeadById?.createdAt).format("YYYY-MM-DD hh:mm:ss a")}</Text>
+                                            </GridItem>
+                                            <GridItem>
+                                                <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><CgWebsite color={"rgb(96, 93, 255)"} size={20} />{isGetLeadById?.company}</Text>
+                                            </GridItem>
+                                        </Grid>
                                     </GridItem>
                                 </Grid>
                             </TabPanel>

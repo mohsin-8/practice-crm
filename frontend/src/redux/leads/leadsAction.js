@@ -113,3 +113,31 @@ export const UpdateLeadByIdAction = (leadId, onSuccess, formData) => {
             });
     }
 };
+
+export const GetLeadsByIdAction = (leadId) => {
+    return (dispatch) => {
+        dispatch({
+            type: actionTypes.GET_LEADS_BY_ID_LOADING
+        });
+        axiosInstance.get(`/lead/get/${leadId}`)
+            .then((res) => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.GET_LEADS_BY_ID_SUCCESS,
+                        payload: res.data
+                    });
+                } else {
+                    dispatch({
+                        type: actionTypes.GET_LEADS_BY_ID_FAILED,
+                        payload: res.data.message
+                    });
+                }
+            })
+            .catch((error) => {
+                dispatch({
+                    type: actionTypes.GET_LEADS_BY_ID_FAILED,
+                    payload: error.response?.data?.message || "Failed to fetch lead data by id."
+                });
+            });
+    }
+};
