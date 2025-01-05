@@ -16,7 +16,7 @@ Clone the repository using below command:
 
 3. Add below code in ```.env``` file:
    ```bash
-   REACT_APP_STRIPE_PUBLISHEABLE_KEY=pk_test_51OgMexK2Ly0dfRbQMdqgWw8zkB803zYXBTkeP5Zs5fxWwOjg9ZzofoLxXE8PiCkc0QacOVAKVZHkXJIuLAKjiD7V00oZKibKn6
+   REACT_APP_STRIPE_PUBLISHEABLE_KEY=<Enter Publishable Key>
 4. Install dependencies:
    ```bash
    npm install
@@ -33,13 +33,13 @@ Clone the repository using below command:
      
   3. Add below code in ```.env``` file:
      ```bash
-     MONGODB=mongodb+srv://momo:mohsinalikhan@cluster0.n6bdw.mongodb.net/practice-crm?retryWrites=true&w=majority&appName=Cluster0
+     MONGODB=mongodb+srv://momo:<password>@cluster0.n6bdw.mongodb.net/practice-crm?retryWrites=true&w=majority&appName=Cluster0
      JWT_SECRET=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-     EMAIL_USER="alikhanmohsin420@gmail.com"
+     EMAIL_USER="entervalidemailaddress@mailnater.com"
      EMAIL_PASS="bjys yooa umpj qkzg"
      LOCAL_FRONTEND_URL="http://localhost:3000"
      LIVE_FRONTEND_URL="https://practice-crm-server.vercel.app"
-     STRIPE_SECRET_KEY="sk_test_51OgMexK2Ly0dfRbQeJPbczm4CqUzJQK4JSzbOWGM9dfBzfQenUP8nCR3e0adRckGMIXB735EL3ucCyPONhjIdv1500cUa10J25"
+     STRIPE_SECRET_KEY="<Enter Stripe Secret Key>"
   4. Install dependencies:
      ```bash
      npm install
