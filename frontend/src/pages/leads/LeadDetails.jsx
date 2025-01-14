@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { FaBinoculars, FaBriefcase, FaCalendarAlt, FaChartLine, FaDollarSign, FaEye, FaGlobe, FaPhoneAlt, FaTrophy } from 'react-icons/fa';
 import { CgWebsite } from "react-icons/cg";
 import { IoMdMail } from "react-icons/io";
+import { IoShareSocial } from "react-icons/io5";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import ClientImage from "../../assets/images/lead-detail-client.png";
 import { useParams } from 'react-router-dom';
@@ -74,13 +75,16 @@ const LeadDetails = () => {
                                                 <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><FaPhoneAlt color={"rgb(96, 93, 255)"} size={20} /> {isGetLeadById?.phone}</Text>
                                             </GridItem>
                                             <GridItem>
-                                                <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><FaGlobe color={"rgb(96, 93, 255)"} size={20} /> {isGetLeadById?.lead_source}</Text>
+                                                <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><IoShareSocial color={"rgb(96, 93, 255)"} size={20} /> {isGetLeadById?.lead_source}</Text>
                                             </GridItem>
                                             <GridItem>
                                                 <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><FaCalendarAlt color={"rgb(96, 93, 255)"} size={20} />{moment(isGetLeadById?.createdAt).format("YYYY-MM-DD hh:mm:ss a")}</Text>
                                             </GridItem>
                                             <GridItem>
                                                 <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><CgWebsite color={"rgb(96, 93, 255)"} size={20} />{isGetLeadById?.company}</Text>
+                                            </GridItem>
+                                            <GridItem>
+                                                <Text fontSize={"14px"} fontWeight={500} display={"flex"} alignItems={"center"} gap={3}><FaGlobe color={"rgb(96, 93, 255)"} size={20} />{isGetLeadById?.country}</Text>
                                             </GridItem>
                                         </Grid>
                                     </GridItem>
