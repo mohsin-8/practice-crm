@@ -8,7 +8,6 @@ const projectsRoutes = require("./routes/projectRoutes");
 const tagsRoutes = require("./routes/tagsRoutes");
 const productRoutes = require("./routes/productRoutes");
 const leadsRoutes = require("./routes/leadsRoutes");
-const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -23,6 +22,5 @@ app.use("/project", projectsRoutes);
 app.use("/", tagsRoutes);
 app.use("/", productRoutes);
 app.use("/", leadsRoutes);
-app.use("/", orderRoutes);
 
 app.listen(PORT, () => console.log(`server is running on port: ${PORT}`));
