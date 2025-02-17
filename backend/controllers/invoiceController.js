@@ -6,10 +6,11 @@ exports.InvoiceCreate = async (req, res) => {
         const { leadId, items, totalAmount, dueDate } = req.body;
 
         const lead = await LeadsModel.findById(leadId);
+
         if (!lead) return res.status(404).json({ error: "Lead not found" });
 
         const newInvoice = new InvoiceModel({
-            lead: leadId,
+            leadId,
             items,
             totalAmount,
             dueDate,
@@ -25,7 +26,7 @@ exports.InvoiceCreate = async (req, res) => {
 
 exports.InvoiceGet = async (req, res) => {
     try {
-        const invoices = await InvoiceModel.find().populate("lead");
+        const invoices = await InvoiceModel.find({});
         return res.status(200).json(invoices);
     } catch (error) {
         res.status().json({ message: error.message });
