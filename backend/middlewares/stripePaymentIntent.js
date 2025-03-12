@@ -1,34 +1,63 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const TransactionModel = require("../models/Transactions");
 const InvoiceModel = require("../models/Invoice");
-const TransactionModel = require("../models/Transaction");
 
-exports.createPaymentIntent = async (req, res) => {
+exports.stripeWebhook = async (req, res) => {
+    const sig = req.headers["stripe-signature"];
+    let event;
+
     try {
-        const { invoiceId } = req.body;
-
-        const invoice = await InvoiceModel.findById(invoiceId);
-        if (!invoice) return res.status(404).json({ error: "Invoice not found" });
-
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(invoice.totalAmount * 100),
-            currency: "usd",
-            metadata: { invoiceId: invoice._id.toString() }
-        });
-
-        const transaction = new TransactionModel({
-            invoiceId: invoice._id,
-            amount: invoice.totalAmount,
-            currency: "usd",
-            stripePaymentIntentId: paymentIntent.id,
-            status: "Pending"
-        });
-        await transaction.save();
-
-        invoice.stripePaymentIntentId = paymentIntent.id;
-        await invoice.save();
-
-        res.status(200).json({ clientSecret: paymentIntent.client_secret });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+        return res.status(400).json({ error: `Webhook Error: ${err.message}` });
     }
+
+    switch (event.type) {
+        case "payment_intent.succeeded":
+            const paymentIntent = event.data.object;
+            const invoice = await InvoiceModel.findOneAndUpdate(
+                { stripePaymentIntentId: paymentIntent.id },
+                { status: "Paid" },
+                { new: true }
+            );
+
+            if (invoice) {
+                await TransactionModel.create({
+                    invoice: invoice._id,
+                    amountPaid: paymentIntent.amount / 100,
+                    paymentMethod: "Stripe",
+                    transactionId: paymentIntent.id,
+                    stripeChargeId: paymentIntent.charges.data[0].id,
+                    status: "Success",
+                });
+            }
+            break;
+
+        case "charge.dispute.created": // Handle Chargeback Initiation
+            const dispute = event.data.object;
+            await TransactionModel.findOneAndUpdate(
+                { stripeChargeId: dispute.charge },
+                { chargebackStatus: "Disputed" }
+            );
+            break;
+
+        case "charge.dispute.closed": // Handle Chargeback Outcome
+            const closedDispute = event.data.object;
+            const chargebackResult = closedDispute.status === "won" ? "Won" : "Lost";
+
+            await TransactionModel.findOneAndUpdate(
+                { stripeChargeId: closedDispute.charge },
+                { chargebackStatus: chargebackResult }
+            );
+
+            // Optionally reverse the invoice if the chargeback is lost
+            if (chargebackResult === "Lost") {
+                await InvoiceModel.findOneAndUpdate(
+                    { stripePaymentIntentId: closedDispute.payment_intent },
+                    { status: "Chargeback" }
+                );
+            }
+            break;
+    }
+
+    res.status(200).json({ received: true });
 };
