@@ -9,17 +9,21 @@ import { GoProjectRoadmap } from "react-icons/go";
 import { IoCreateOutline, IoPersonSharp } from "react-icons/io5"
 import { PiMicrosoftTeamsLogo, PiKanbanLight } from "react-icons/pi";
 import { FaUsers } from "react-icons/fa6";
+import { useDispatch } from 'react-redux';
+import { logoutAction } from '../../redux/auth/authAction';
 
 const Sidebar = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const handleLogout = () => {
-        localStorage.removeItem("role");
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("accessToken");
+    const AfterLogout = () => {
         navigate("/login");
     };
+
+    const handleLogout = () => {
+        dispatch(logoutAction(AfterLogout));
+    };
+    
     return (
         <Box as="nav" position="fixed" left="0" top="0" w="270px" h="100vh" bg="#ffffff">
             <VStack display="block" spacing="4" align="start">

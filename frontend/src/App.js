@@ -14,17 +14,21 @@ import Projects from './pages/projects/Projects';
 import AddNewLead from "./pages/leads/AddNewLead";
 import LeadDetails from './pages/leads/LeadDetails';
 import Leads from './pages/leads/Leads';
+import PublicRoutes from './PublicRoutes';
 
 const App = () => {
+
   return (
     <>
       <Routes>
+        <Route element={<PublicRoutes />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+        </Route>
         <Route path="*" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/profile-settings" element={<ProfileSettings />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/sales/leads" element={<Leads />} />

@@ -35,7 +35,7 @@ export const RegisterAction = (userData) => {
     };
 };
 
-export const LoginAction = (userData) => {
+export const LoginAction = (userData, redirectAfterLogin) => {
     return (dispatch) => {
         dispatch({
             type: actionTypes.AUTH_LOGIN_LOADING
@@ -44,15 +44,11 @@ export const LoginAction = (userData) => {
         axiosInstance.post("/auth/login", userData)
             .then((res) => {
                 if (res.status === 200) {
-                    localStorage.setItem("accessToken", res.data.accessToken);
-                    localStorage.setItem("token", res.data.refreshToken);
-                    localStorage.setItem("role", res.data.user.role);
-                    localStorage.setItem("user", JSON.stringify(res.data.user));
-
                     dispatch({
                         type: actionTypes.AUTH_LOGIN_SUCCESS,
                         payload: res.data
                     });
+                    redirectAfterLogin();
                 } else {
                     dispatch({
                         type: actionTypes.AUTH_LOGIN_ERROR,
@@ -213,4 +209,12 @@ export const clearLoginError = () => {
     return {
         type: actionTypes.CLEAR_LOGIN_ERROR,
     };
+};
+
+export const logoutAction = (AfterLogout) => {
+    return (dispatch) => {
+        dispatch({ type: actionTypes.AUTH_LOGOUT });
+        // persistStore(store).purge();
+        AfterLogout();
+    }
 };

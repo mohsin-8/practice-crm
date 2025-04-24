@@ -19,7 +19,11 @@ const initial_state = {
     isGetUserError: null,
     isLoadingChangePassword: false,
     isChangePassword: null,
-    isChangePasswordError: null
+    isChangePasswordError: null,
+    token: null,
+    refreshToken: null,
+    user: null,
+    role: null,
 };
 
 export const authReducer = (state = initial_state, action) => {
@@ -51,8 +55,11 @@ export const authReducer = (state = initial_state, action) => {
         case actionTypes.AUTH_LOGIN_SUCCESS:
             return {
                 ...state,
-                isLogin: payload,
                 isLoadingLogin: false,
+                token: action.payload.accessToken,
+                refreshToken: action.payload.refreshToken,
+                user: action.payload.user,
+                role: action.payload.user.role,
                 isAuthenticated: true,
             }
         case actionTypes.AUTH_LOGIN_ERROR:
@@ -137,6 +144,16 @@ export const authReducer = (state = initial_state, action) => {
                 isLoadingChangePassword: false,
                 isChangePasswordError: action.payload
             }
+        case actionTypes.AUTH_LOGOUT:
+            return {
+                ...state,
+                token: null,
+                refreshToken: null,
+                user: null,
+                role: null,
+                isAuthenticated: false,
+            }
+
         default:
             return state;
     };

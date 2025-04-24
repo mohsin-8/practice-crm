@@ -16,40 +16,40 @@ const Login = () => {
 
     const { isLoginError, isAuthenticated, isLoadingLogin } = useSelector(state => state.auth);
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            setTimeout(() => {
-                const token = localStorage.getItem('token');
-                const resetPasstoken = localStorage.getItem('resetPasswordToken');
-                const role = localStorage.getItem('role');
+    // useEffect(() => {
+    //     if (isAuthenticated) {
+    //         setTimeout(() => {
+    //             const token = localStorage.getItem('token');
+    //             const resetPasstoken = localStorage.getItem('resetPasswordToken');
+    //             const role = localStorage.getItem('role');
 
-                if (token || resetPasstoken) {
-                    if (role === "admin") {
-                        navigate("/dashboard");
-                    } else if (role === "sales") {
-                        navigate("/dashboard");
-                    } else if (role === "support") {
-                        navigate("/dashboard");
-                    } else if (role === "team lead") {
-                        navigate("/dashboard");
-                    } else if (role === "manager") {
-                        navigate("/dashboard");
-                    }
+    //             if (token || resetPasstoken) {
+    //                 if (role === "admin") {
+    //                     navigate("/dashboard");
+    //                 } else if (role === "sales") {
+    //                     navigate("/dashboard");
+    //                 } else if (role === "support") {
+    //                     navigate("/dashboard");
+    //                 } else if (role === "team lead") {
+    //                     navigate("/dashboard");
+    //                 } else if (role === "manager") {
+    //                     navigate("/dashboard");
+    //                 }
 
-                    toast({
-                        title: "Login Successfull",
-                        position: "top-right",
-                        isClosable: true,
-                        status: "success",
-                    });
-                }
-            }, 1000);
-        }
+    //                 toast({
+    //                     title: "Login Successfull",
+    //                     position: "top-right",
+    //                     isClosable: true,
+    //                     status: "success",
+    //                 });
+    //             }
+    //         }, 1000);
+    //     }
 
-        return () => {
-            dispatch(clearLoginError());
-        };
-    }, [isAuthenticated, navigate, toast, dispatch]);
+    //     return () => {
+    //         dispatch(clearLoginError());
+    //     };
+    // }, [isAuthenticated, navigate, toast, dispatch]);
 
     const validate = () => {
         let errors = {};
@@ -60,7 +60,6 @@ const Login = () => {
             errors.email = "Please enter a valid email address.";
         }
 
-        // Check if password is not empty
         if (!formData.password) {
             errors.password = "Please enter your password.";
         }
@@ -83,11 +82,14 @@ const Login = () => {
             }));
         }
     };
+    const redirectAfterLogin = () => {
+        navigate("/dashboard");
+    };
 
     const loginHandleSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
-            dispatch(LoginAction(formData));
+            dispatch(LoginAction(formData, redirectAfterLogin));
         }
     };
 
